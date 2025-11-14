@@ -1,3 +1,220 @@
+# Building MCP for Unity (netstandard2.0 Compatibility)
+
+This document describes how to build a Unity‑compatible version of the ModelContextProtocol (MCP) libraries. It covers feature downgrades, dependency handling, and the final workflow to produce a complete set of DLLs that work inside Unity.
+
+---
+
+## Overview
+
+Unity currently supports a subset of modern C# and .NET features. The original MCP SDK uses features not available in Unity's runtime (for example, `required` members and advanced compiler features). To make the SDK compatible, a downgrade process is required.
+
+This document outlines the full workflow used to:
+
+* Detect and remove incompatible language features
+* Add a `netstandard2.0` build target
+* Relax warnings and nullability for Unity builds
+* Ensure all dependencies are copied into the output directory
+* Package the results for Unity
+
+All final Unity‑ready builds are located in:
+
+```
+artifacts/bin/ModelContextProtocol/Release/netstandard2.0/
+artifacts/bin/ModelContextProtocol.Core/Release/netstandard2.0/
+```
+
+Copy all DLLs from these directories into your Unity project.
+
+---
+
+# 1. Downgrade Incompatible Language Features
+
+A script was created to scan for incompatible features (primarily `required` and `init`). Running the downgrade script updates affected files to use Unity‑compatible C# patterns.
+
+Example steps:
+
+* Create downgrade script
+* Run `downgradeScript.ps1`
+* Verify all incompatible language features are removed
+
+---
+
+# 2. Add Unity Build Target (`netstandard2.0`)
+
+The MCP projects were updated to include a `netstandard2.0` target. This enables Unity to load and run the compiled DLLs.
+
+ASP.NET or server components will not function inside Unity—only the client and core logic is supported.
+
+---
+
+# 3. Fix Central Package Management
+
+The repository uses Central Package Management via `Directory.Packages.props`. Duplicate `PackageVersion` entries and version conflicts were removed.
+
+System.Text.Json was aligned to a consistent version, and all necessary dependencies were included for `netstandard2.0`.
+
+---
+
+# 4. Build Commands for Unity
+
+Use the following commands to produce Unity‑compatible builds. These commands relax warnings, disable nullable enforcement, and ensure all dependencies are copied into the output directory.
+
+## Build Core
+
+```
+dotnet build src/ModelContextProtocol.Core/ModelContextProtocol.Core.csproj \
+    -c Release -f netstandard2.0 \
+    -p:TreatWarningsAsErrors=false \
+    -p:Nullable=disable \
+    -p:CopyLocalLockFileAssemblies=true
+```
+
+## Build Main Library
+
+```
+dotnet build src/ModelContextProtocol/ModelContextProtocol.csproj \
+    -c Release -f netstandard2.0 \
+    -p:TreatWarningsAsErrors=false \
+    -p:Nullable=disable \
+    -p:CopyLocalLockFileAssemblies=true
+```
+
+These commands produce DLLs and all required dependencies for Unity.
+
+---
+
+# 5. Output Locations
+
+Final Unity‑ready DLLs appear in:
+
+```
+artifacts/bin/ModelContextProtocol.Core/Release/netstandard2.0/
+artifacts/bin/ModelContextProtocol/Release/netstandard2.0/
+```
+
+Copy **all** files from both directories into:
+
+```
+Assets/Plugins/MCP/
+```
+
+Unity will automatically import and compile the libraries.
+
+---
+
+# 6. Notes
+
+* The ASP.NET server components do not run inside Unity.
+* The Unity build uses downgraded compiler features and may differ from the server version.
+* Always rebuild the `netstandard2.0` targets before updating Unity.
+
+---
+
+# 7. Optional Automation
+
+You can create a build script (`build-unity.ps1` or `build-unity.sh`) to run the two build commands and automatically copy DLLs into your Unity project.
+
+## 7.1 Windows PowerShell script (build-unity.ps1)
+
+Example PowerShell script you can place in the repository root:
+
+```
+param(
+    [string]$Configuration = "Release",
+    [string]$Framework = "netstandard2.0",
+    [string]$UnityPluginPath = "..\..\UnityProject\Assets\Plugins\MCP"  # adjust to your Unity project path
+)
+
+Write-Host "Building MCP Core for Unity..."
+
+dotnet build src/ModelContextProtocol.Core/ModelContextProtocol.Core.csproj `
+    -c $Configuration -f $Framework `
+    -p:TreatWarningsAsErrors=false `
+    -p:Nullable=disable `
+    -p:CopyLocalLockFileAssemblies=true
+
+Write-Host "Building MCP main library for Unity..."
+
+dotnet build src/ModelContextProtocol/ModelContextProtocol.csproj `
+    -c $Configuration -f $Framework `
+    -p:TreatWarningsAsErrors=false `
+    -p:Nullable=disable `
+    -p:CopyLocalLockFileAssemblies=true
+
+$coreOut = "artifacts/bin/ModelContextProtocol.Core/$Configuration/$Framework"
+$libOut  = "artifacts/bin/ModelContextProtocol/$Configuration/$Framework"
+
+Write-Host "Copying DLLs to Unity plugin folder: $UnityPluginPath"
+
+New-Item -ItemType Directory -Force -Path $UnityPluginPath | Out-Null
+
+Get-ChildItem $coreOut -Filter *.dll | Copy-Item -Destination $UnityPluginPath -Force
+Get-ChildItem $libOut  -Filter *.dll | Copy-Item -Destination $UnityPluginPath -Force
+
+Write-Host "Done. Unity plugins updated."
+```
+
+Usage example:
+
+```
+./build-unity.ps1 -UnityPluginPath "C:\Path\To\UnityProject\Assets\Plugins\MCP"
+```
+
+## 7.2 Linux/macOS Bash script (build-unity.sh)
+
+Example Bash script for Linux or macOS:
+
+```
+#!/usr/bin/env bash
+set -euo pipefail
+
+CONFIG=${1:-Release}
+FRAMEWORK=${2:-netstandard2.0}
+UNITY_PLUGIN_PATH=${3:-"../../UnityProject/Assets/Plugins/MCP"}  # adjust to your Unity project path
+
+echo "Building MCP Core for Unity..."
+
+dotnet build src/ModelContextProtocol.Core/ModelContextProtocol.Core.csproj \
+    -c "$CONFIG" -f "$FRAMEWORK" \
+    -p:TreatWarningsAsErrors=false \
+    -p:Nullable=disable \
+    -p:CopyLocalLockFileAssemblies=true
+
+echo "Building MCP main library for Unity..."
+
+dotnet build src/ModelContextProtocol/ModelContextProtocol.csproj \
+    -c "$CONFIG" -f "$FRAMEWORK" \
+    -p:TreatWarningsAsErrors=false \
+    -p:Nullable=disable \
+    -p:CopyLocalLockFileAssemblies=true
+
+CORE_OUT="artifacts/bin/ModelContextProtocol.Core/$CONFIG/$FRAMEWORK"
+LIB_OUT="artifacts/bin/ModelContextProtocol/$CONFIG/$FRAMEWORK"
+
+mkdir -p "$UNITY_PLUGIN_PATH"
+
+echo "Copying DLLs to Unity plugin folder: $UNITY_PLUGIN_PATH"
+
+cp "$CORE_OUT"/*.dll "$UNITY_PLUGIN_PATH"/
+cp "$LIB_OUT"/*.dll "$UNITY_PLUGIN_PATH"/
+
+echo "Done. Unity plugins updated."
+```
+
+Make it executable:
+
+```
+chmod +x build-unity.sh
+```
+
+Usage example:
+
+```
+./build-unity.sh Release netstandard2.0 "../../UnityProject/Assets/Plugins/MCP"
+```
+
+## End of Document
+
 # MCP C# SDK
 
 [![NuGet preview version](https://img.shields.io/nuget/vpre/ModelContextProtocol.svg)](https://www.nuget.org/packages/ModelContextProtocol/absoluteLatest)
