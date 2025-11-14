@@ -37,25 +37,8 @@ Example steps:
 * Run `downgradeScript.ps1`
 * Verify all incompatible language features are removed
 
----
 
-# 2. Add Unity Build Target (`netstandard2.0`)
-
-The MCP projects were updated to include a `netstandard2.0` target. This enables Unity to load and run the compiled DLLs.
-
-ASP.NET or server components will not function inside Unity—only the client and core logic is supported.
-
----
-
-# 3. Fix Central Package Management
-
-The repository uses Central Package Management via `Directory.Packages.props`. Duplicate `PackageVersion` entries and version conflicts were removed.
-
-System.Text.Json was aligned to a consistent version, and all necessary dependencies were included for `netstandard2.0`.
-
----
-
-# 4. Build Commands for Unity
+# 2. Build Commands for Unity
 
 Use the following commands to produce Unity‑compatible builds. These commands relax warnings, disable nullable enforcement, and ensure all dependencies are copied into the output directory.
 
@@ -83,7 +66,7 @@ These commands produce DLLs and all required dependencies for Unity.
 
 ---
 
-# 5. Output Locations
+# 3. Output Locations
 
 Final Unity‑ready DLLs appear in:
 
@@ -102,7 +85,7 @@ Unity will automatically import and compile the libraries.
 
 ---
 
-# 6. Notes
+# 4. Notes
 
 * The ASP.NET server components do not run inside Unity.
 * The Unity build uses downgraded compiler features and may differ from the server version.
@@ -110,11 +93,11 @@ Unity will automatically import and compile the libraries.
 
 ---
 
-# 7. Optional Automation
+# 5. Optional Automation
 
 You can create a build script (`build-unity.ps1` or `build-unity.sh`) to run the two build commands and automatically copy DLLs into your Unity project.
 
-## 7.1 Windows PowerShell script (build-unity.ps1)
+## 5.1 Windows PowerShell script (build-unity.ps1)
 
 Example PowerShell script you can place in the repository root:
 
@@ -160,7 +143,7 @@ Usage example:
 ./build-unity.ps1 -UnityPluginPath "C:\Path\To\UnityProject\Assets\Plugins\MCP"
 ```
 
-## 7.2 Linux/macOS Bash script (build-unity.sh)
+## 5.2 Linux/macOS Bash script (build-unity.sh)
 
 Example Bash script for Linux or macOS:
 
