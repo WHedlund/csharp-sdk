@@ -23,7 +23,7 @@ artifacts/bin/ModelContextProtocol/Release/netstandard2.0/
 artifacts/bin/ModelContextProtocol.Core/Release/netstandard2.0/
 ```
 
-Copy all DLLs from these directories into your Unity project.
+Copy all DLLs except System.Threading.Tasks.Extensions from these directories into your Unity project.
 
 ---
 
@@ -75,7 +75,7 @@ artifacts/bin/ModelContextProtocol.Core/Release/netstandard2.0/
 artifacts/bin/ModelContextProtocol/Release/netstandard2.0/
 ```
 
-Copy **all** files from both directories into:
+Copy **all** files **except System.Threading.Tasks.Extensions** from both directories into:
 
 ```
 Assets/Plugins/MCP/
