@@ -2,6 +2,8 @@
 
 This document describes how to build a Unity‑compatible version of the ModelContextProtocol (MCP) libraries. It covers feature downgrades, dependency handling, and the final workflow to produce a complete set of DLLs that work inside Unity.
 
+**See `Unity Scripts/Mcp-libraries` and `Unity Scripts/Mcp-server` for working code** 
+
 ---
 
 ## Overview
