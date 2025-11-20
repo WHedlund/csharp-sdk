@@ -1,4 +1,13 @@
-#if !NET
+#if NETSTANDARD2_1
+namespace System.Collections.Generic;
+
+internal static class CollectionExtensions
+{
+    // netstandard2.1 already has GetValueOrDefault; we only need the aggregator overload
+    public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source) =>
+        System.Linq.Enumerable.ToDictionary(source, kv => kv.Key, kv => kv.Value);
+}
+#elif !NET
 using ModelContextProtocol;
 
 namespace System.Collections.Generic;
@@ -18,6 +27,6 @@ internal static class CollectionExtensions
     }
 
     public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source) =>
-        source.ToDictionary(kv => kv.Key, kv => kv.Value);
+        System.Linq.Enumerable.ToDictionary(source, kv => kv.Key, kv => kv.Value);
 }
 #endif

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net10.0;net9.0;net8.0;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net10.0;net9.0;net8.0;netstandard2.1</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IsPackable>true</IsPackable>
     <PackageId>ModelContextProtocol.Core</PackageId>
@@ -10,7 +10,7 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' != 'netstandard2.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' != 'netstandard2.1'">
     <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
 
@@ -18,8 +18,8 @@
     <Compile Include="..\Common\Throw.cs" Link="Throw.cs" />
   </ItemGroup>
 
-  <!-- Dependencies only needed by netstandard2.0 -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+  <!-- Dependencies only needed by netstandard2.1 -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
     <Compile Include="..\Common\CancellableStreamReader\**\*.cs" />
     <PackageReference Include="Microsoft.Bcl.Memory" />
     <PackageReference Include="System.Diagnostics.DiagnosticSource" />
@@ -31,7 +31,7 @@
   <ItemGroup Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net9.0'))">
     <PackageReference Include="System.IO.Pipelines" />
   </ItemGroup>
-  
+
   <!-- Dependencies only needed pre-net10.0 -->
   <ItemGroup Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net10.0'))">
     <PackageReference Include="System.Net.ServerSentEvents" />
@@ -46,13 +46,14 @@
   <ItemGroup>
     <None Include="README.md" pack="true" PackagePath="\" />
   </ItemGroup>
-<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-  <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-  <PackageReference Include="System.Text.Json" />
+
+<ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'netstandard2.1'))">
+  <Compile Remove="..\Common\Polyfills\System\Diagnostics\CodeAnalysis\NullableAttributes.cs" />
 </ItemGroup>
-<PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-  <Nullable>disable</Nullable>
-  <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-</PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+    <Nullable>disable</Nullable>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
 
 </Project>

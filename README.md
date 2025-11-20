@@ -39,32 +39,48 @@ Example steps:
 * Run `downgradeScript.ps1`
 * Verify all incompatible language features are removed
 
+## Update project targets
+Update build targets from netstandard 2.0 to 2.1
+This is done in this repository `./Directory.Build.props`, `./src/ModelContextProtocol/ModelContextProtocol.csproj`, `./src/ModelContextProtocol.Core/ModelContextProtocol.Core.csproj`
 
+## Netstandard 2.1 implementations
+Some things from `\src\Common\Polyfills\System\Collections\Generic\CollectionExtensions.cs` are implemented by netstandard 2.1 so we modify/remove some paths to ignored these. including CollectionExtensions. Modifications are made in: 
+`./src/ModelContextProtocol/ModelContextProtocol.csproj`
+```
+<ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'netstandard2.1'))">
+  <Compile Remove="..\Common\Polyfills\System\Collections\Generic\CollectionExtensions.cs" />
+</ItemGroup>
+```
+`./src/ModelContextProtocol.Core/ModelContextProtocol.Core.csproj` 
+```
+<ItemGroup Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'netstandard2.1'))">
+  <Compile Remove="..\Common\Polyfills\System\Diagnostics\CodeAnalysis\NullableAttributes.cs" />
+</ItemGroup>
+```
+`\src\Common\Polyfills\System\Collections\Generic\CollectionExtensions.cs`
+```
+#if NETSTANDARD2_1
+namespace System.Collections.Generic;
+
+internal static class CollectionExtensions
+{
+    // netstandard2.1 already has GetValueOrDefault; we only need the aggregator overload
+    public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source) =>
+        System.Linq.Enumerable.ToDictionary(source, kv => kv.Key, kv => kv.Value);
+}
+#elif !NET```
 # 2. Build Commands for Unity
 
 Use the following commands to produce Unity‑compatible builds. These commands relax warnings, disable nullable enforcement, and ensure all dependencies are copied into the output directory.
 
-## Build Core
+## Build
+# Build everything in Release
+dotnet build -c Release -p:TargetFramework=netstandard2.1
 
+# Pack individual libraries (xml + pdb + snupkg go to artifacts/packages/<Config>)
 ```
-dotnet build src/ModelContextProtocol.Core/ModelContextProtocol.Core.csproj \
-    -c Release -f netstandard2.0 \
-    -p:TreatWarningsAsErrors=false \
-    -p:Nullable=disable \
-    -p:CopyLocalLockFileAssemblies=true
+dotnet build src/ModelContextProtocol/ModelContextProtocol.csproj   -c Release   -p:TargetFramework=netstandard2.1   -p:TreatWarningsAsErrors=false   -p:NoWarn=9999   /clp:ErrorsOnly
 ```
-
-## Build Main Library
-
-```
-dotnet build src/ModelContextProtocol/ModelContextProtocol.csproj \
-    -c Release -f netstandard2.0 \
-    -p:TreatWarningsAsErrors=false \
-    -p:Nullable=disable \
-    -p:CopyLocalLockFileAssemblies=true
-```
-
-These commands produce DLLs and all required dependencies for Unity.
 
 ---
 
