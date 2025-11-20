@@ -2,7 +2,7 @@
 
 This document describes how to build a Unity‑compatible version of the ModelContextProtocol (MCP) libraries. It covers feature downgrades, dependency handling, and the final workflow to produce a complete set of DLLs that work inside Unity.
 
-**See `Unity Scripts/Mcp-libraries` and `Unity Scripts/Mcp-server` for working code** 
+**See `Unity Scripts/Mcp-library` and `Unity Scripts/Mcp-server` for compiled library and unity scripts including Http Transport** 
 
 ---
 
@@ -77,7 +77,7 @@ artifacts/bin/ModelContextProtocol.Core/Release/netstandard2.0/
 artifacts/bin/ModelContextProtocol/Release/netstandard2.0/
 ```
 
-Copy **all** files **except System.Threading.Tasks.Extensions** from both directories into:
+Copy **all** files **except System.Threading.Tasks.Extensions** from both directories into (for example):
 
 ```
 Assets/Plugins/MCP/
@@ -94,109 +94,6 @@ Unity will automatically import and compile the libraries.
 * Always rebuild the `netstandard2.0` targets before updating Unity.
 
 ---
-
-# 5. Optional Automation
-
-You can create a build script (`build-unity.ps1` or `build-unity.sh`) to run the two build commands and automatically copy DLLs into your Unity project.
-
-## 5.1 Windows PowerShell script (build-unity.ps1)
-
-Example PowerShell script you can place in the repository root:
-
-```
-param(
-    [string]$Configuration = "Release",
-    [string]$Framework = "netstandard2.0",
-    [string]$UnityPluginPath = "..\..\UnityProject\Assets\Plugins\MCP"  # adjust to your Unity project path
-)
-
-Write-Host "Building MCP Core for Unity..."
-
-dotnet build src/ModelContextProtocol.Core/ModelContextProtocol.Core.csproj `
-    -c $Configuration -f $Framework `
-    -p:TreatWarningsAsErrors=false `
-    -p:Nullable=disable `
-    -p:CopyLocalLockFileAssemblies=true
-
-Write-Host "Building MCP main library for Unity..."
-
-dotnet build src/ModelContextProtocol/ModelContextProtocol.csproj `
-    -c $Configuration -f $Framework `
-    -p:TreatWarningsAsErrors=false `
-    -p:Nullable=disable `
-    -p:CopyLocalLockFileAssemblies=true
-
-$coreOut = "artifacts/bin/ModelContextProtocol.Core/$Configuration/$Framework"
-$libOut  = "artifacts/bin/ModelContextProtocol/$Configuration/$Framework"
-
-Write-Host "Copying DLLs to Unity plugin folder: $UnityPluginPath"
-
-New-Item -ItemType Directory -Force -Path $UnityPluginPath | Out-Null
-
-Get-ChildItem $coreOut -Filter *.dll | Copy-Item -Destination $UnityPluginPath -Force
-Get-ChildItem $libOut  -Filter *.dll | Copy-Item -Destination $UnityPluginPath -Force
-
-Write-Host "Done. Unity plugins updated."
-```
-
-Usage example:
-
-```
-./build-unity.ps1 -UnityPluginPath "C:\Path\To\UnityProject\Assets\Plugins\MCP"
-```
-
-## 5.2 Linux/macOS Bash script (build-unity.sh)
-
-Example Bash script for Linux or macOS:
-
-```
-#!/usr/bin/env bash
-set -euo pipefail
-
-CONFIG=${1:-Release}
-FRAMEWORK=${2:-netstandard2.0}
-UNITY_PLUGIN_PATH=${3:-"../../UnityProject/Assets/Plugins/MCP"}  # adjust to your Unity project path
-
-echo "Building MCP Core for Unity..."
-
-dotnet build src/ModelContextProtocol.Core/ModelContextProtocol.Core.csproj \
-    -c "$CONFIG" -f "$FRAMEWORK" \
-    -p:TreatWarningsAsErrors=false \
-    -p:Nullable=disable \
-    -p:CopyLocalLockFileAssemblies=true
-
-echo "Building MCP main library for Unity..."
-
-dotnet build src/ModelContextProtocol/ModelContextProtocol.csproj \
-    -c "$CONFIG" -f "$FRAMEWORK" \
-    -p:TreatWarningsAsErrors=false \
-    -p:Nullable=disable \
-    -p:CopyLocalLockFileAssemblies=true
-
-CORE_OUT="artifacts/bin/ModelContextProtocol.Core/$CONFIG/$FRAMEWORK"
-LIB_OUT="artifacts/bin/ModelContextProtocol/$CONFIG/$FRAMEWORK"
-
-mkdir -p "$UNITY_PLUGIN_PATH"
-
-echo "Copying DLLs to Unity plugin folder: $UNITY_PLUGIN_PATH"
-
-cp "$CORE_OUT"/*.dll "$UNITY_PLUGIN_PATH"/
-cp "$LIB_OUT"/*.dll "$UNITY_PLUGIN_PATH"/
-
-echo "Done. Unity plugins updated."
-```
-
-Make it executable:
-
-```
-chmod +x build-unity.sh
-```
-
-Usage example:
-
-```
-./build-unity.sh Release netstandard2.0 "../../UnityProject/Assets/Plugins/MCP"
-```
 
 ## End of Document
 
