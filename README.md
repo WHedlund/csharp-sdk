@@ -74,12 +74,14 @@ internal static class CollectionExtensions
 Use the following commands to produce Unity‑compatible builds. These commands relax warnings, disable nullable enforcement, and ensure all dependencies are copied into the output directory.
 
 ## Build
-# Build everything in Release
-dotnet build -c Release -p:TargetFramework=netstandard2.1
-
-# Pack individual libraries (xml + pdb + snupkg go to artifacts/packages/<Config>)
 ```
-dotnet build src/ModelContextProtocol/ModelContextProtocol.csproj   -c Release   -p:TargetFramework=netstandard2.1   -p:TreatWarningsAsErrors=false   -p:NoWarn=9999   /clp:ErrorsOnly
+dotnet build src/ModelContextProtocol/ModelContextProtocol.csproj \
+  -c Release \
+  -p:TargetFramework=netstandard2.1 \
+  -p:CopyLocalLockFileAssemblies=true \
+  -p:TreatWarningsAsErrors=false \
+  -p:NoWarn=9999
+
 ```
 
 ---
@@ -107,7 +109,6 @@ Unity will automatically import and compile the libraries.
 
 * The ASP.NET server components do not run inside Unity.
 * The Unity build uses downgraded compiler features and may differ from the server version.
-* Always rebuild the `netstandard2.0` targets before updating Unity.
 
 ---
 
