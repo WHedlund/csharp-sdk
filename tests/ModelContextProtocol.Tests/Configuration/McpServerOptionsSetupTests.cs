@@ -108,7 +108,7 @@ public class McpServerOptionsSetupTests
     }
 
     [Fact]
-    public void Configure_WithSubscribeToResourcesHandler_WithoutOtherResourcesHandler_DoesNotCreateResourcesCapability()
+    public void Configure_WithSubscribeToResourcesHandler_WithoutOtherResourcesHandler_DoesCreateResourcesCapability()
     {
         var services = new ServiceCollection();
         services.AddMcpServer()
@@ -116,12 +116,13 @@ public class McpServerOptionsSetupTests
 
         var options = services.BuildServiceProvider().GetRequiredService<IOptions<McpServerOptions>>().Value;
 
-        Assert.Null(options.Handlers.SubscribeToResourcesHandler);
-        Assert.Null(options.Capabilities?.Resources);
+        Assert.NotNull(options.Handlers.SubscribeToResourcesHandler);
+        Assert.NotNull(options.Capabilities?.Resources);
+        Assert.True(options.Capabilities.Resources.Subscribe);
     }
 
     [Fact]
-    public void Configure_WithUnsubscribeFromResourcesHandler_WithoutOtherResourcesHandler_DoesNotCreateResourcesCapability()
+    public void Configure_WithUnsubscribeFromResourcesHandler_WithoutOtherResourcesHandler_DoesCreateResourcesCapability()
     {
         var services = new ServiceCollection();
         services.AddMcpServer()
@@ -129,8 +130,9 @@ public class McpServerOptionsSetupTests
 
         var options = services.BuildServiceProvider().GetRequiredService<IOptions<McpServerOptions>>().Value;
 
-        Assert.Null(options.Handlers.UnsubscribeFromResourcesHandler);
-        Assert.Null(options.Capabilities?.Resources);
+        Assert.NotNull(options.Handlers.UnsubscribeFromResourcesHandler);
+        Assert.NotNull(options.Capabilities?.Resources);
+        Assert.True(options.Capabilities.Resources.Subscribe);
     }
 
     [Fact]
@@ -279,6 +281,59 @@ public class McpServerOptionsSetupTests
 
         Assert.NotNull(options.Handlers.CompleteHandler);
         Assert.NotNull(options.Capabilities?.Completions);
+    }
+    #endregion
+
+    #region TaskStore Tests
+    [Fact]
+    public void TaskStore_IsPopulatedFromDI_WhenNotExplicitlySet()
+    {
+        var services = new ServiceCollection();
+        services.AddMcpServer();
+        services.AddSingleton<IMcpTaskStore, InMemoryMcpTaskStore>();
+
+        var options = services.BuildServiceProvider().GetRequiredService<IOptions<McpServerOptions>>().Value;
+
+        Assert.IsType<InMemoryMcpTaskStore>(options.TaskStore);
+    }
+
+    [Fact]
+    public void TaskStore_ExplicitOption_TakesPrecedenceOverDI()
+    {
+        var explicitStore = new InMemoryMcpTaskStore();
+
+        var services = new ServiceCollection();
+        services.AddMcpServer(options => options.TaskStore = explicitStore);
+        services.AddSingleton<IMcpTaskStore, InMemoryMcpTaskStore>();
+
+        var options = services.BuildServiceProvider().GetRequiredService<IOptions<McpServerOptions>>().Value;
+
+        Assert.Same(explicitStore, options.TaskStore);
+    }
+
+    [Fact]
+    public void TaskStore_RemainsNull_WhenNothingIsRegistered()
+    {
+        var services = new ServiceCollection();
+        services.AddMcpServer();
+
+        var options = services.BuildServiceProvider().GetRequiredService<IOptions<McpServerOptions>>().Value;
+
+        Assert.Null(options.TaskStore);
+    }
+
+    [Fact]
+    public void TaskStore_CanBeOverriddenToNull_AfterDIRegistration()
+    {
+        var services = new ServiceCollection();
+        services.AddMcpServer();
+        services.AddSingleton<IMcpTaskStore, InMemoryMcpTaskStore>();
+
+        services.Configure<McpServerOptions>(options => options.TaskStore = null);
+
+        var options = services.BuildServiceProvider().GetRequiredService<IOptions<McpServerOptions>>().Value;
+
+        Assert.Null(options.TaskStore);
     }
     #endregion
 }

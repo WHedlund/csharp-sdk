@@ -13,6 +13,7 @@ public readonly struct RequestId : IEquatable<RequestId>
 {
     /// <summary>Initializes a new instance of the <see cref="RequestId"/> with a specified value.</summary>
     /// <param name="value">The required ID value.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
     public RequestId(string value)
     {
         Throw.IfNull(value);
@@ -27,8 +28,8 @@ public readonly struct RequestId : IEquatable<RequestId>
         Id = value;
     }
 
-    /// <summary>Gets the underlying object for this id.</summary>
-    /// <remarks>This will either be a <see cref="string"/>, a boxed <see cref="long"/>, or <see langword="null"/>.</remarks>
+    /// <summary>Gets the underlying object for this ID.</summary>
+    /// <remarks>This object will either be a <see cref="string"/>, a boxed <see cref="long"/>, or <see langword="null"/>.</remarks>
     public object? Id { get; }
 
     /// <inheritdoc />

@@ -118,7 +118,7 @@ internal sealed partial class AIFunctionMcpServerTool : McpServerTool
         Tool tool = new()
         {
             Name = options?.Name ?? function.Name,
-            Description = options?.Description ?? function.Description,
+            Description = GetToolDescription(function, options),
             InputSchema = function.JsonSchema,
             OutputSchema = CreateOutputSchema(function, options, out bool structuredOutputRequiresWrapping),
             Icons = options?.Icons,
@@ -146,8 +146,25 @@ internal sealed partial class AIFunctionMcpServerTool : McpServerTool
 
             // Populate Meta from options and/or McpMetaAttribute instances if a MethodInfo is available
             tool.Meta = function.UnderlyingMethod is not null ?
-                CreateMetaFromAttributes(function.UnderlyingMethod, options.Meta, options.SerializerOptions) :
+                CreateMetaFromAttributes(function.UnderlyingMethod, options.Meta) :
                 options.Meta;
+
+            // Apply user-specified Execution settings if provided
+            if (options.Execution is not null)
+            {
+                tool.Execution = options.Execution;
+            }
+        }
+
+        // Auto-detect async methods and mark with taskSupport = "optional" unless explicitly configured.
+        // This enables implicit task support for async tools: clients can choose to invoke them
+        // synchronously (wait for completion) or as a task (receive taskId, poll for result).
+        if (function.UnderlyingMethod is not null && 
+            IsAsyncMethod(function.UnderlyingMethod) &&
+            tool.Execution?.TaskSupport is null)
+        {
+            tool.Execution ??= new ToolExecution();
+            tool.Execution.TaskSupport = ToolTaskSupport.Optional;
         }
 
         return new AIFunctionMcpServerTool(function, tool, options?.Services, structuredOutputRequiresWrapping, options?.Metadata ?? []);
@@ -188,6 +205,12 @@ internal sealed partial class AIFunctionMcpServerTool : McpServerTool
             }
 
             newOptions.UseStructuredContent = toolAttr.UseStructuredContent;
+
+            if (toolAttr._taskSupport is { } taskSupport)
+            {
+                newOptions.Execution ??= new ToolExecution();
+                newOptions.Execution.TaskSupport ??= taskSupport;
+            }
         }
 
         if (method.GetCustomAttribute<DescriptionAttribute>() is { } descAttr)
@@ -211,7 +234,6 @@ internal sealed partial class AIFunctionMcpServerTool : McpServerTool
 
         AIFunction = function;
         ProtocolTool = tool;
-        ProtocolTool.McpServerTool = this;
 
         _structuredOutputRequiresWrapping = structuredOutputRequiresWrapping;
         _metadata = metadata;
@@ -244,12 +266,12 @@ internal sealed partial class AIFunctionMcpServerTool : McpServerTool
         object? result;
         result = await AIFunction.InvokeAsync(arguments, cancellationToken).ConfigureAwait(false);
 
-        JsonNode? structuredContent = CreateStructuredResponse(result);
+        JsonElement? structuredContent = CreateStructuredResponse(result);
         return result switch
         {
             AIContent aiContent => new()
             {
-                Content = [aiContent.ToContent()],
+                Content = [aiContent.ToContentBlock()],
                 StructuredContent = structuredContent,
                 IsError = aiContent is ErrorContent
             },
@@ -315,27 +337,27 @@ internal sealed partial class AIFunctionMcpServerTool : McpServerTool
 
         // Case the name based on the provided naming policy.
         return (policy ?? JsonNamingPolicy.SnakeCaseLower).ConvertName(name) ?? name;
+    }
 
-        static bool IsAsyncMethod(MethodInfo method)
+    private static bool IsAsyncMethod(MethodInfo method)
+    {
+        Type t = method.ReturnType;
+
+        if (t == typeof(Task) || t == typeof(ValueTask))
         {
-            Type t = method.ReturnType;
+            return true;
+        }
 
-            if (t == typeof(Task) || t == typeof(ValueTask))
+        if (t.IsGenericType)
+        {
+            t = t.GetGenericTypeDefinition();
+            if (t == typeof(Task<>) || t == typeof(ValueTask<>) || t == typeof(IAsyncEnumerable<>))
             {
                 return true;
             }
-
-            if (t.IsGenericType)
-            {
-                t = t.GetGenericTypeDefinition();
-                if (t == typeof(Task<>) || t == typeof(ValueTask<>) || t == typeof(IAsyncEnumerable<>))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
+
+        return false;
     }
 
     /// <summary>Creates metadata from attributes on the specified method and its declaring class, with the MethodInfo as the first item.</summary>
@@ -361,9 +383,8 @@ internal sealed partial class AIFunctionMcpServerTool : McpServerTool
     /// <summary>Creates a Meta <see cref="JsonObject"/> from <see cref="McpMetaAttribute"/> instances on the specified method.</summary>
     /// <param name="method">The method to extract <see cref="McpMetaAttribute"/> instances from.</param>
     /// <param name="meta">Optional <see cref="JsonObject"/> to seed the Meta with. Properties from this object take precedence over attributes.</param>
-    /// <param name="serializerOptions">Optional <see cref="JsonSerializerOptions"/> to use for serialization. This parameter is ignored when parsing JSON strings from attributes.</param>
     /// <returns>A <see cref="JsonObject"/> with metadata, or null if no metadata is present.</returns>
-    internal static JsonObject? CreateMetaFromAttributes(MethodInfo method, JsonObject? meta = null, JsonSerializerOptions? serializerOptions = null)
+    internal static JsonObject? CreateMetaFromAttributes(MethodInfo method, JsonObject? meta = null)
     {
         // Transfer all McpMetaAttribute instances to the Meta JsonObject, ignoring any that would overwrite existing properties.
         foreach (var attr in method.GetCustomAttributes<McpMetaAttribute>())
@@ -404,6 +425,57 @@ internal sealed partial class AIFunctionMcpServerTool : McpServerTool
         {
             throw new ArgumentException($"The tool name '{name}' is invalid. Tool names must match the regular expression '{ValidateToolNameRegex()}'");
         }
+    }
+
+    /// <summary>
+    /// Gets the tool description, synthesizing from both the function description and return description when appropriate.
+    /// </summary>
+    /// <remarks>
+    /// When UseStructuredContent is true, the return description is included in the output schema.
+    /// When UseStructuredContent is false (default), if there's a return description in the ReturnJsonSchema,
+    /// it will be appended to the tool description so the information is still available to consumers.
+    /// </remarks>
+    private static string? GetToolDescription(AIFunction function, McpServerToolCreateOptions? options)
+    {
+        string? description = options?.Description ?? function.Description;
+
+        // If structured content is enabled, the return description will be in the output schema
+        if (options?.UseStructuredContent is true)
+        {
+            return description;
+        }
+
+        // When structured content is disabled, try to extract the return description from ReturnJsonSchema
+        // and append it to the tool description so the information is available to consumers
+        string? returnDescription = GetReturnDescription(function.ReturnJsonSchema);
+        if (string.IsNullOrWhiteSpace(returnDescription))
+        {
+            return description;
+        }
+
+        // Synthesize a combined description
+        if (string.IsNullOrWhiteSpace(description))
+        {
+            return $"Returns: {returnDescription}";
+        }
+
+        return $"{description}\nReturns: {returnDescription}";
+    }
+
+    /// <summary>
+    /// Extracts the description property from a ReturnJsonSchema if present.
+    /// </summary>
+    private static string? GetReturnDescription(JsonElement? returnJsonSchema)
+    {
+        if (returnJsonSchema is not JsonElement schema ||
+            schema.ValueKind is not JsonValueKind.Object ||
+            !schema.TryGetProperty("description", out JsonElement descriptionElement) ||
+            descriptionElement.ValueKind is not JsonValueKind.String)
+        {
+            return null;
+        }
+
+        return descriptionElement.GetString();
     }
 
     private static JsonElement? CreateOutputSchema(AIFunction function, McpServerToolCreateOptions? toolCreateOptions, out bool structuredOutputRequiresWrapping)
@@ -457,7 +529,7 @@ internal sealed partial class AIFunctionMcpServerTool : McpServerTool
         return outputSchema;
     }
 
-    private JsonNode? CreateStructuredResponse(object? aiFunctionResult)
+    private JsonElement? CreateStructuredResponse(object? aiFunctionResult)
     {
         if (ProtocolTool.OutputSchema is null)
         {
@@ -465,25 +537,29 @@ internal sealed partial class AIFunctionMcpServerTool : McpServerTool
             return null;
         }
 
-        JsonNode? nodeResult = aiFunctionResult switch
+        JsonElement? elementResult = aiFunctionResult switch
         {
-            JsonNode node => node,
-            JsonElement jsonElement => JsonSerializer.SerializeToNode(jsonElement, McpJsonUtilities.JsonContext.Default.JsonElement),
-            _ => JsonSerializer.SerializeToNode(aiFunctionResult, AIFunction.JsonSerializerOptions.GetTypeInfo(typeof(object))),
+            JsonElement jsonElement => jsonElement,
+            JsonNode node => JsonSerializer.SerializeToElement(node, McpJsonUtilities.JsonContext.Default.JsonNode),
+            null => null,
+            _ => JsonSerializer.SerializeToElement(aiFunctionResult, AIFunction.JsonSerializerOptions.GetTypeInfo(typeof(object))),
         };
 
         if (_structuredOutputRequiresWrapping)
         {
-            return new JsonObject
+            JsonNode? resultNode = elementResult is { } je
+                ? JsonSerializer.SerializeToNode(je, McpJsonUtilities.JsonContext.Default.JsonElement)
+                : null;
+            return JsonSerializer.SerializeToElement(new JsonObject
             {
-                ["result"] = nodeResult
-            };
+                ["result"] = resultNode
+            }, McpJsonUtilities.JsonContext.Default.JsonObject);
         }
 
-        return nodeResult;
+        return elementResult;
     }
 
-    private static CallToolResult ConvertAIContentEnumerableToCallToolResult(IEnumerable<AIContent> contentItems, JsonNode? structuredContent)
+    private static CallToolResult ConvertAIContentEnumerableToCallToolResult(IEnumerable<AIContent> contentItems, JsonElement? structuredContent)
     {
         List<ContentBlock> contentList = [];
         bool allErrorContent = true;
@@ -491,7 +567,7 @@ internal sealed partial class AIFunctionMcpServerTool : McpServerTool
 
         foreach (var item in contentItems)
         {
-            contentList.Add(item.ToContent());
+            contentList.Add(item.ToContentBlock());
             hasAny = true;
 
             if (allErrorContent && item is not ErrorContent)

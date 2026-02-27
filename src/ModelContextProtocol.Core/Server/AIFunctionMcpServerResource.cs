@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -221,7 +222,7 @@ internal sealed class AIFunctionMcpServerResource : McpServerResource
             MimeType = options?.MimeType ?? "application/octet-stream",
             Icons = options?.Icons,
             Meta = function.UnderlyingMethod is not null ?
-                AIFunctionMcpServerTool.CreateMetaFromAttributes(function.UnderlyingMethod, options?.Meta, options?.SerializerOptions) :
+                AIFunctionMcpServerTool.CreateMetaFromAttributes(function.UnderlyingMethod, options?.Meta) :
                 options?.Meta,
         };
 
@@ -293,7 +294,6 @@ internal sealed class AIFunctionMcpServerResource : McpServerResource
     {
         AIFunction = function;
         ProtocolResourceTemplate = resourceTemplate;
-        ProtocolResourceTemplate.McpServerResource = this;
         ProtocolResource = resourceTemplate.AsResource();
         _metadata = metadata;
 
@@ -391,7 +391,12 @@ internal sealed class AIFunctionMcpServerResource : McpServerResource
 
             DataContent dc => new()
             {
-                Contents = [new BlobResourceContents { Uri = request.Params!.Uri, MimeType = dc.MediaType, Blob = dc.Base64Data.ToString() }],
+                Contents = [new BlobResourceContents 
+                { 
+                    Uri = request.Params!.Uri, 
+                    MimeType = dc.MediaType, 
+                    Blob = EncodingUtilities.GetUtf8Bytes(dc.Base64Data.Span)
+                }],
             },
 
             string text => new()
@@ -420,7 +425,7 @@ internal sealed class AIFunctionMcpServerResource : McpServerResource
                         {
                             Uri = request.Params!.Uri,
                             MimeType = dc.MediaType,
-                            Blob = dc.Base64Data.ToString()
+                            Blob = EncodingUtilities.GetUtf8Bytes(dc.Base64Data.Span)
                         },
 
                         _ => throw new InvalidOperationException($"Unsupported AIContent type '{ac.GetType()}' returned from resource function."),

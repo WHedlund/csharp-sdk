@@ -9,10 +9,10 @@ uid: progress
 
 The Model Context Protocol (MCP) supports [progress tracking] for long-running operations through notification messages.
 
-[progress tracking]: https://modelcontextprotocol.io/specification/2025-06-18/basic/utilities/progress
+[progress tracking]: https://modelcontextprotocol.io/specification/2025-11-25/basic/utilities/progress
 
 Typically progress tracking is supported by server tools that perform operations that take a significant amount of time to complete, such as image generation or complex calculations.
-However, progress tracking is defined in the MCP specification as a general feature that can be implemented for any request that is handled by either a server or a client.
+However, progress tracking is defined in the MCP specification as a general feature that can be implemented for any request that's handled by either a server or a client.
 This project illustrates the common case of a server tool that performs a long-running operation and sends progress updates to the client.
 
 ### Server Implementation
@@ -30,14 +30,14 @@ The server must verify that the caller provided a `progressToken` in the request
 ### Client Implementation
 
 Clients request progress updates by including a `progressToken` in the parameters of a request.
-Note that servers are not required to support progress tracking, so clients should not depend on receiving progress updates.
+Note that servers aren't required to support progress tracking, so clients should not depend on receiving progress updates.
 
 In the MCP C# SDK, clients can specify a `progressToken` in the request parameters when calling a tool method.
 The client should also provide a notification handler to process "notifications/progress" notifications.
-There are two way to do this. The first is to register a notification handler using the <xref:ModelContextProtocol.McpSession.RegisterNotificationHandler*> method on the <xref:ModelContextProtocol.Client.McpClient> instance. A handler registered this way will receive all progress notifications sent by the server.
+There are two ways to do this. The first is to register a notification handler using the <xref:ModelContextProtocol.McpSession.RegisterNotificationHandler*> method on the <xref:ModelContextProtocol.Client.McpClient> instance. A handler registered this way will receive all progress notifications sent by the server.
 
 ```csharp
-mcpClient.RegisterNotificationHandler(NotificationMethods.ProgressNotification,
+await using var handler = mcpClient.RegisterNotificationHandler(NotificationMethods.ProgressNotification,
     (notification, cancellationToken) =>
     {
         if (JsonSerializer.Deserialize<ProgressNotificationParams>(notification.Params) is { } pn &&
@@ -47,7 +47,7 @@ mcpClient.RegisterNotificationHandler(NotificationMethods.ProgressNotification,
             Console.WriteLine($"Tool progress: {pn.Progress.Progress} of {pn.Progress.Total} - {pn.Progress.Message}");
         }
         return ValueTask.CompletedTask;
-    }).ConfigureAwait(false);
+    });
 ```
 
 The second way is to pass a [`Progress<T>`](https://learn.microsoft.com/dotnet/api/system.progress-1) instance to the tool method. `Progress<T>` is a standard .NET type that provides a way to receive progress updates.

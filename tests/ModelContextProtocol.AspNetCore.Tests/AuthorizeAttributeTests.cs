@@ -17,7 +17,6 @@ namespace ModelContextProtocol.AspNetCore.Tests;
 /// </summary>
 public class AuthorizeAttributeTests(ITestOutputHelper testOutputHelper) : KestrelInMemoryTest(testOutputHelper)
 {
-    private readonly MockLoggerProvider _mockLoggerProvider = new();
 
     private async Task<McpClient> ConnectAsync()
     {
@@ -273,7 +272,6 @@ public class AuthorizeAttributeTests(ITestOutputHelper testOutputHelper) : Kestr
     [Fact]
     public async Task ListTools_WithoutAuthFilters_ThrowsInvalidOperationException()
     {
-        _mockLoggerProvider.LogMessages.Clear();
         await using var app = await StartServerWithoutAuthFilters(builder => builder.WithTools<AuthorizationTestTools>());
         var client = await ConnectAsync();
 
@@ -281,7 +279,7 @@ public class AuthorizeAttributeTests(ITestOutputHelper testOutputHelper) : Kestr
             await client.ListToolsAsync(cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Equal("Request failed (remote): An error occurred.", exception.Message);
-        Assert.Contains(_mockLoggerProvider.LogMessages, log =>
+        Assert.Contains(MockLoggerProvider.LogMessages, log =>
             log.LogLevel == LogLevel.Warning &&
             log.Exception is InvalidOperationException &&
             log.Exception.Message.Contains("Authorization filter was not invoked for tools/list operation") &&
@@ -291,7 +289,6 @@ public class AuthorizeAttributeTests(ITestOutputHelper testOutputHelper) : Kestr
     [Fact]
     public async Task CallTool_WithoutAuthFilters_ReturnsError()
     {
-        _mockLoggerProvider.LogMessages.Clear();
         await using var app = await StartServerWithoutAuthFilters(builder => builder.WithTools<AuthorizationTestTools>());
         var client = await ConnectAsync();
 
@@ -304,7 +301,7 @@ public class AuthorizeAttributeTests(ITestOutputHelper testOutputHelper) : Kestr
 
         var errorContent = Assert.IsType<TextContentBlock>(Assert.Single(toolResult.Content));
         Assert.Equal("An error occurred invoking 'authorized_tool'.", errorContent.Text);
-        Assert.Contains(_mockLoggerProvider.LogMessages, log =>
+        Assert.Contains(MockLoggerProvider.LogMessages, log =>
             log.LogLevel == LogLevel.Error &&
             log.Exception is InvalidOperationException &&
             log.Exception.Message.Contains("Authorization filter was not invoked for tools/call operation") &&
@@ -314,7 +311,6 @@ public class AuthorizeAttributeTests(ITestOutputHelper testOutputHelper) : Kestr
     [Fact]
     public async Task ListPrompts_WithoutAuthFilters_ThrowsInvalidOperationException()
     {
-        _mockLoggerProvider.LogMessages.Clear();
         await using var app = await StartServerWithoutAuthFilters(builder => builder.WithPrompts<AuthorizationTestPrompts>());
         var client = await ConnectAsync();
 
@@ -322,7 +318,7 @@ public class AuthorizeAttributeTests(ITestOutputHelper testOutputHelper) : Kestr
             await client.ListPromptsAsync(cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Equal("Request failed (remote): An error occurred.", exception.Message);
-        Assert.Contains(_mockLoggerProvider.LogMessages, log =>
+        Assert.Contains(MockLoggerProvider.LogMessages, log =>
             log.LogLevel == LogLevel.Warning &&
             log.Exception is InvalidOperationException &&
             log.Exception.Message.Contains("Authorization filter was not invoked for prompts/list operation") &&
@@ -332,7 +328,6 @@ public class AuthorizeAttributeTests(ITestOutputHelper testOutputHelper) : Kestr
     [Fact]
     public async Task GetPrompt_WithoutAuthFilters_ThrowsInvalidOperationException()
     {
-        _mockLoggerProvider.LogMessages.Clear();
         await using var app = await StartServerWithoutAuthFilters(builder => builder.WithPrompts<AuthorizationTestPrompts>());
         var client = await ConnectAsync();
 
@@ -343,7 +338,7 @@ public class AuthorizeAttributeTests(ITestOutputHelper testOutputHelper) : Kestr
                 cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Equal("Request failed (remote): An error occurred.", exception.Message);
-        Assert.Contains(_mockLoggerProvider.LogMessages, log =>
+        Assert.Contains(MockLoggerProvider.LogMessages, log =>
             log.LogLevel == LogLevel.Warning &&
             log.Exception is InvalidOperationException &&
             log.Exception.Message.Contains("Authorization filter was not invoked for prompts/get operation") &&
@@ -353,7 +348,6 @@ public class AuthorizeAttributeTests(ITestOutputHelper testOutputHelper) : Kestr
     [Fact]
     public async Task ListResources_WithoutAuthFilters_ThrowsInvalidOperationException()
     {
-        _mockLoggerProvider.LogMessages.Clear();
         await using var app = await StartServerWithoutAuthFilters(builder => builder.WithResources<AuthorizationTestResources>());
         var client = await ConnectAsync();
 
@@ -361,7 +355,7 @@ public class AuthorizeAttributeTests(ITestOutputHelper testOutputHelper) : Kestr
             await client.ListResourcesAsync(cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Equal("Request failed (remote): An error occurred.", exception.Message);
-        Assert.Contains(_mockLoggerProvider.LogMessages, log =>
+        Assert.Contains(MockLoggerProvider.LogMessages, log =>
             log.LogLevel == LogLevel.Warning &&
             log.Exception is InvalidOperationException &&
             log.Exception.Message.Contains("Authorization filter was not invoked for resources/list operation") &&
@@ -371,7 +365,6 @@ public class AuthorizeAttributeTests(ITestOutputHelper testOutputHelper) : Kestr
     [Fact]
     public async Task ReadResource_WithoutAuthFilters_ThrowsInvalidOperationException()
     {
-        _mockLoggerProvider.LogMessages.Clear();
         await using var app = await StartServerWithoutAuthFilters(builder => builder.WithResources<AuthorizationTestResources>());
         var client = await ConnectAsync();
 
@@ -381,7 +374,7 @@ public class AuthorizeAttributeTests(ITestOutputHelper testOutputHelper) : Kestr
                 cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Equal("Request failed (remote): An error occurred.", exception.Message);
-        Assert.Contains(_mockLoggerProvider.LogMessages, log =>
+        Assert.Contains(MockLoggerProvider.LogMessages, log =>
             log.LogLevel == LogLevel.Warning &&
             log.Exception is InvalidOperationException &&
             log.Exception.Message.Contains("Authorization filter was not invoked for resources/read operation") &&
@@ -391,7 +384,6 @@ public class AuthorizeAttributeTests(ITestOutputHelper testOutputHelper) : Kestr
     [Fact]
     public async Task ListResourceTemplates_WithoutAuthFilters_ThrowsInvalidOperationException()
     {
-        _mockLoggerProvider.LogMessages.Clear();
         await using var app = await StartServerWithoutAuthFilters(builder => builder.WithResources<AuthorizationTestResources>());
         var client = await ConnectAsync();
 
@@ -399,11 +391,110 @@ public class AuthorizeAttributeTests(ITestOutputHelper testOutputHelper) : Kestr
             await client.ListResourceTemplatesAsync(cancellationToken: TestContext.Current.CancellationToken));
 
         Assert.Equal("Request failed (remote): An error occurred.", exception.Message);
-        Assert.Contains(_mockLoggerProvider.LogMessages, log =>
+        Assert.Contains(MockLoggerProvider.LogMessages, log =>
             log.LogLevel == LogLevel.Warning &&
             log.Exception is InvalidOperationException &&
             log.Exception.Message.Contains("Authorization filter was not invoked for resources/templates/list operation") &&
             log.Exception.Message.Contains("Ensure that AddAuthorizationFilters() is called"));
+    }
+
+    [Fact]
+    public async Task ListTools_WithHandlerAndNullCollection_AllToolsVisible()
+    {
+        // When ToolCollection is null (custom handler only), the auth filter can't look up
+        // primitives in the collection and should not filter any tools.
+        await using var app = await StartServerWithAuth(builder =>
+            builder.WithListToolsHandler(static (_, _) => ValueTask.FromResult(new ListToolsResult
+            {
+                Tools = [new Tool { Name = "custom_tool" }]
+            })));
+
+        var client = await ConnectAsync();
+        var tools = await client.ListToolsAsync(cancellationToken: TestContext.Current.CancellationToken);
+
+        // Tool from custom handler (not in ToolCollection) should be visible even to anonymous users
+        Assert.Single(tools);
+        Assert.Equal("custom_tool", tools[0].Name);
+    }
+
+    [Fact]
+    public async Task ListTools_WithMixedCollectionAndHandler_HandlerToolsNotFiltered()
+    {
+        // Tools in the ToolCollection are filtered based on auth metadata.
+        // Tools returned only from a custom handler (not in ToolCollection) are not filtered.
+        await using var app = await StartServerWithAuth(builder =>
+        {
+            builder.WithTools<AuthorizationTestTools>();
+            builder.WithListToolsHandler(static (_, _) => ValueTask.FromResult(new ListToolsResult
+            {
+                Tools = [new Tool { Name = "handler_tool" }]
+            }));
+        });
+
+        var client = await ConnectAsync();
+        var tools = await client.ListToolsAsync(cancellationToken: TestContext.Current.CancellationToken);
+
+        // Anonymous user: anonymous_tool from collection + handler_tool (not in collection, so not filtered)
+        Assert.Equal(2, tools.Count);
+        var toolNames = tools.Select(t => t.Name).OrderBy(n => n).ToList();
+        Assert.Equal(["anonymous_tool", "handler_tool"], toolNames);
+    }
+
+    [Fact]
+    public async Task ListPrompts_WithHandlerAndNullCollection_AllPromptsVisible()
+    {
+        // When PromptCollection is null (custom handler only), the auth filter can't look up
+        // primitives in the collection and should not filter any prompts.
+        await using var app = await StartServerWithAuth(builder =>
+            builder.WithListPromptsHandler(static (_, _) => ValueTask.FromResult(new ListPromptsResult
+            {
+                Prompts = [new Prompt { Name = "custom_prompt" }]
+            })));
+
+        var client = await ConnectAsync();
+        var prompts = await client.ListPromptsAsync(cancellationToken: TestContext.Current.CancellationToken);
+
+        // Prompt from custom handler (not in PromptCollection) should be visible even to anonymous users
+        Assert.Single(prompts);
+        Assert.Equal("custom_prompt", prompts[0].Name);
+    }
+
+    [Fact]
+    public async Task ListResources_WithHandlerAndNullCollection_AllResourcesVisible()
+    {
+        // When ResourceCollection is null (custom handler only), the auth filter can't look up
+        // primitives in the collection and should not filter any resources.
+        await using var app = await StartServerWithAuth(builder =>
+            builder.WithListResourcesHandler(static (_, _) => ValueTask.FromResult(new ListResourcesResult
+            {
+                Resources = [new Resource { Name = "custom_resource", Uri = "resource://custom" }]
+            })));
+
+        var client = await ConnectAsync();
+        var resources = await client.ListResourcesAsync(cancellationToken: TestContext.Current.CancellationToken);
+
+        // Resource from custom handler (not in ResourceCollection) should be visible even to anonymous users
+        Assert.Single(resources);
+        Assert.Equal("resource://custom", resources[0].Uri);
+    }
+
+    [Fact]
+    public async Task ListResourceTemplates_WithHandlerAndNullCollection_AllResourceTemplatesVisible()
+    {
+        // When ResourceCollection is null (custom handler only), the auth filter can't look up
+        // primitives in the collection and should not filter any resource templates.
+        await using var app = await StartServerWithAuth(builder =>
+            builder.WithListResourceTemplatesHandler(static (_, _) => ValueTask.FromResult(new ListResourceTemplatesResult
+            {
+                ResourceTemplates = [new ResourceTemplate { Name = "custom_template", UriTemplate = "resource://custom/{id}" }]
+            })));
+
+        var client = await ConnectAsync();
+        var templates = await client.ListResourceTemplatesAsync(cancellationToken: TestContext.Current.CancellationToken);
+
+        // Template from custom handler (not in ResourceCollection) should be visible even to anonymous users
+        Assert.Single(templates);
+        Assert.Equal("resource://custom/{id}", templates[0].UriTemplate);
     }
 
     private async Task<WebApplication> StartServerWithAuth(Action<IMcpServerBuilder> configure, string? userName = null, params string[] roles)
@@ -412,7 +503,6 @@ public class AuthorizeAttributeTests(ITestOutputHelper testOutputHelper) : Kestr
         configure(mcpServerBuilder);
 
         Builder.Services.AddAuthorization();
-        Builder.Services.AddSingleton<ILoggerProvider>(_mockLoggerProvider);
 
         var app = Builder.Build();
 
@@ -439,7 +529,6 @@ public class AuthorizeAttributeTests(ITestOutputHelper testOutputHelper) : Kestr
         configure(mcpServerBuilder);
 
         Builder.Services.AddAuthorization();
-        Builder.Services.AddSingleton<ILoggerProvider>(_mockLoggerProvider);
 
         var app = Builder.Build();
         app.MapMcp();

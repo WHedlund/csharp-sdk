@@ -158,6 +158,7 @@ public class StatelessServerTests(ITestOutputHelper outputHelper) : KestrelInMem
         Builder.Services.AddMcpServer()
             .WithHttpTransport(options =>
             {
+#pragma warning disable MCPEXP002 // RunSessionHandler is experimental
                 options.RunSessionHandler = async (context, server, cancellationToken) =>
                 {
                     unsolicitedNotificationException = await Assert.ThrowsAsync<InvalidOperationException>(
@@ -165,6 +166,7 @@ public class StatelessServerTests(ITestOutputHelper outputHelper) : KestrelInMem
 
                     await server.RunAsync(cancellationToken);
                 };
+#pragma warning restore MCPEXP002
             });
 
         await StartAsync();
@@ -203,7 +205,6 @@ public class StatelessServerTests(ITestOutputHelper outputHelper) : KestrelInMem
 
         var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => server.SendRequestAsync(new JsonRpcRequest
         {
-            Id = default,
             Method = RequestMethods.SamplingCreateMessage
         }));
         return ex.Message;
@@ -222,7 +223,6 @@ public class StatelessServerTests(ITestOutputHelper outputHelper) : KestrelInMem
 
         var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => server.SendRequestAsync(new JsonRpcRequest
         {
-            Id = default,
             Method = RequestMethods.RootsList
         }));
         return ex.Message;
@@ -236,12 +236,11 @@ public class StatelessServerTests(ITestOutputHelper outputHelper) : KestrelInMem
         // Even when the client has elicitation support, it should not be advertised in stateless mode.
         Assert.Null(server.ClientCapabilities);
 
-        var requestElicitationEx = Assert.Throws<InvalidOperationException>(() => server.ElicitAsync(new() { Message = string.Empty }));
+        var requestElicitationEx = await Assert.ThrowsAsync<InvalidOperationException>(() => server.ElicitAsync(new() { Message = string.Empty }).AsTask());
         Assert.Equal(expectedElicitationErrorMessage, requestElicitationEx.Message);
 
         var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => server.SendRequestAsync(new JsonRpcRequest
         {
-            Id = default,
             Method = RequestMethods.ElicitationCreate
         }));
         return ex.Message;

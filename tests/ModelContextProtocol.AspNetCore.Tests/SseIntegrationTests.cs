@@ -8,6 +8,7 @@ using ModelContextProtocol.AspNetCore.Tests.Utils;
 using ModelContextProtocol.Client;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
+using ModelContextProtocol.Tests.Utils;
 using System.Text.Json.Serialization;
 using TestServerWithHosting.Tools;
 
@@ -82,16 +83,18 @@ public partial class SseIntegrationTests(ITestOutputHelper outputHelper) : Kestr
         Builder.Services.AddMcpServer()
             .WithHttpTransport(httpTransportOptions =>
             {
+#pragma warning disable MCPEXP002 // RunSessionHandler is experimental
                 httpTransportOptions.RunSessionHandler = (httpContext, mcpServer, cancellationToken) =>
                 {
                     // We could also use ServerCapabilities.NotificationHandlers, but it's good to have some test coverage of RunSessionHandler.
                     mcpServer.RegisterNotificationHandler("test/notification", async (notification, cancellationToken) =>
                     {
                         Assert.Equal("Hello from client!", notification.Params?["message"]?.GetValue<string>());
-                        await mcpServer.SendNotificationAsync("test/notification", new Envelope { Message = "Hello from server!" }, serializerOptions: JsonContext.Default.Options, cancellationToken: cancellationToken);
+                        await mcpServer.SendNotificationAsync("test/notification", new Envelope { Message = "Hello from server!" }, serializerOptions: JsonContext.Default.Options, cancellationToken);
                     });
                     return mcpServer.RunAsync(cancellationToken);
                 };
+#pragma warning restore MCPEXP002
             });
 
         await using var app = Builder.Build();
@@ -110,7 +113,7 @@ public partial class SseIntegrationTests(ITestOutputHelper outputHelper) : Kestr
         // Send a test message through POST endpoint
         await mcpClient.SendNotificationAsync("test/notification", new Envelope { Message = "Hello from client!" }, serializerOptions: JsonContext.Default.Options, cancellationToken: TestContext.Current.CancellationToken);
 
-        var message = await receivedNotification.Task.WaitAsync(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken);
+        var message = await receivedNotification.Task.WaitAsync(TestConstants.DefaultTimeout, TestContext.Current.CancellationToken);
         Assert.Equal("Hello from server!", message);
     }
 
