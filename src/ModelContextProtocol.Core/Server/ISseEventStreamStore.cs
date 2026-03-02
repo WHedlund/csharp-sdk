@@ -1,4 +1,4 @@
-namespace ModelContextProtocol.Server;
+﻿namespace ModelContextProtocol.Server;
 
 /// <summary>
 /// Provides storage and retrieval of SSE event streams, enabling resumability and redelivery of events.

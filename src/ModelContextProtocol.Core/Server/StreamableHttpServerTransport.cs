@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using ModelContextProtocol.Protocol;
 using System.Diagnostics;
@@ -56,7 +56,7 @@ public sealed partial class StreamableHttpServerTransport : ITransport
     }
 
     /// <inheritdoc/>
-    public string? SessionId { get; init; }
+    public string? SessionId { get; set; }
 
     /// <summary>
     /// Gets or initializes a value that indicates whether the transport should be in stateless mode that does not require all requests for a given session
@@ -65,7 +65,7 @@ public sealed partial class StreamableHttpServerTransport : ITransport
     /// Server-to-client requests are also unsupported, because the responses might arrive at another ASP.NET Core application process.
     /// Client sampling and roots capabilities are also disabled in stateless mode, because the server cannot make requests.
     /// </summary>
-    public bool Stateless { get; init; }
+    public bool Stateless { get; set; }
 
     /// <summary>
     /// Gets or initializes a value indicating whether the execution context should flow from the calls to <see cref="HandlePostRequestAsync(JsonRpcMessage, Stream, CancellationToken)"/>
@@ -74,13 +74,13 @@ public sealed partial class StreamableHttpServerTransport : ITransport
     /// <value>
     /// The default is <see langword="false"/>.
     /// </value>
-    public bool FlowExecutionContextFromRequests { get; init; }
+    public bool FlowExecutionContextFromRequests { get; set; }
 
     /// <summary>
     /// Gets or sets the event store for resumability support.
     /// When set, events are stored and can be replayed when clients reconnect with a Last-Event-ID header.
     /// </summary>
-    public ISseEventStreamStore? EventStreamStore { get; init; }
+    public ISseEventStreamStore? EventStreamStore { get; set; }
 
     /// <summary>
     /// Gets or sets an optional callback invoked after the initialization handshake completes.
@@ -89,7 +89,7 @@ public sealed partial class StreamableHttpServerTransport : ITransport
     /// When set, this callback is invoked with the <see cref="InitializeRequestParams"/> after a successful
     /// initialization handshake. This can be used to persist session data for cross-instance migration.
     /// </remarks>
-    public Func<InitializeRequestParams, CancellationToken, ValueTask>? OnSessionInitialized { get; init; }
+    public Func<InitializeRequestParams, CancellationToken, ValueTask>? OnSessionInitialized { get; set; }
 
     /// <inheritdoc/>
     public ChannelReader<JsonRpcMessage> MessageReader => _incomingChannel.Reader;

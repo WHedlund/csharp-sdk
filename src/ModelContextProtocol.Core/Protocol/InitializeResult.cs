@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Protocol;
 
@@ -38,7 +38,7 @@ public sealed class InitializeResult : Result
     /// </para>
     /// </remarks>
     [JsonPropertyName("protocolVersion")]
-    public required string ProtocolVersion { get; set; }
+    public string ProtocolVersion { get; set; }
 
     /// <summary>
     /// Gets or sets the server's capabilities.
@@ -48,7 +48,7 @@ public sealed class InitializeResult : Result
     /// and other protocol-specific functionality.
     /// </remarks>
     [JsonPropertyName("capabilities")]
-    public required ServerCapabilities Capabilities { get; set; }
+    public ServerCapabilities Capabilities { get; set; }
 
     /// <summary>
     /// Gets or sets information about the server implementation, including its name and version.
@@ -58,7 +58,7 @@ public sealed class InitializeResult : Result
     /// Clients might use this information for logging, debugging, or compatibility checks.
     /// </remarks>
     [JsonPropertyName("serverInfo")]
-    public required Implementation ServerInfo { get; set; }
+    public Implementation ServerInfo { get; set; }
 
     /// <summary>
     /// Gets or sets optional instructions for using the server and its features.

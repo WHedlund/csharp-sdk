@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Protocol;
 
@@ -19,7 +19,7 @@ public sealed class PromptArgument : IBaseMetadata
 {
     /// <inheritdoc />
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public string Name { get; set; }
 
     /// <inheritdoc />
     [JsonPropertyName("title")]

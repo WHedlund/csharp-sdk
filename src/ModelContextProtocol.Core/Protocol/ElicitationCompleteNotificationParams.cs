@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Protocol;
 
@@ -22,5 +22,5 @@ public sealed class ElicitationCompleteNotificationParams : NotificationParams
     /// clients to correlate the completion notification with previously issued prompts.
     /// </remarks>
     [JsonPropertyName("elicitationId")]
-    public required string ElicitationId { get; set; }
+    public string ElicitationId { get; set; }
 }

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Protocol;
@@ -12,5 +12,5 @@ public sealed class UrlElicitationRequiredErrorData
     /// Gets or sets the elicitations that must be completed before retrying the original request.
     /// </summary>
     [JsonPropertyName("elicitations")]
-    public required IList<ElicitRequestParams> Elicitations { get; set; }
+    public IList<ElicitRequestParams> Elicitations { get; set; }
 }

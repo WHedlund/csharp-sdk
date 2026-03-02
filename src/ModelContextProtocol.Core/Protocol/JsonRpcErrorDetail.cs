@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Protocol;
 
@@ -17,7 +17,7 @@ public sealed class JsonRpcErrorDetail
     /// Gets or sets an integer error code according to the JSON-RPC specification.
     /// </summary>
     [JsonPropertyName("code")]
-    public required int Code { get; set; }
+    public int Code { get; set; }
 
     /// <summary>
     /// Gets or sets a short description of the error.
@@ -28,7 +28,7 @@ public sealed class JsonRpcErrorDetail
     /// in the JSON-RPC 2.0 specification.
     /// </remarks>
     [JsonPropertyName("message")]
-    public required string Message { get; set; }
+    public string Message { get; set; }
 
     /// <summary>
     /// Gets or sets optional additional error data.

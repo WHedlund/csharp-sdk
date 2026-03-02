@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Protocol;
 
@@ -23,14 +23,14 @@ public sealed class CompleteRequestParams : RequestParams
     /// Gets or sets the reference's information.
     /// </summary>
     [JsonPropertyName("ref")]
-    public required Reference Ref { get; set; }
+    public Reference Ref { get; set; }
 
     /// <summary>
     /// Gets or sets the argument information for the completion request, specifying what is being completed
     /// and the current partial input.
     /// </summary>
     [JsonPropertyName("argument")]
-    public required Argument Argument { get; set; }
+    public Argument Argument { get; set; }
 
     /// <summary>
     /// Gets or sets additional, optional context for completions.

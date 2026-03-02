@@ -1,4 +1,4 @@
-
+﻿
 namespace ModelContextProtocol.Authentication;
 
 /// <summary>

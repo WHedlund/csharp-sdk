@@ -1,4 +1,4 @@
-namespace ModelContextProtocol.Server;
+﻿namespace ModelContextProtocol.Server;
 
 /// <summary>
 /// Indicates that a type contains methods that should be exposed as <see cref="McpServerTool"/>s.

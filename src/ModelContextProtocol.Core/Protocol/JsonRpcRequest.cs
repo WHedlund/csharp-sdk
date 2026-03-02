@@ -1,4 +1,4 @@
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Protocol;
@@ -20,7 +20,7 @@ public sealed class JsonRpcRequest : JsonRpcMessageWithId
     /// Gets or sets the name of the method to invoke.
     /// </summary>
     [JsonPropertyName("method")]
-    public required string Method { get; set; }
+    public string Method { get; set; }
 
     /// <summary>
     /// Gets or sets optional parameters for the method.

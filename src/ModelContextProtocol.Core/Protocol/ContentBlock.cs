@@ -1,4 +1,4 @@
-using System.Buffers;
+﻿using System.Buffers;
 using System.Buffers.Text;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -419,7 +419,7 @@ public sealed class TextContentBlock : ContentBlock
     /// Gets or sets the text content of the message.
     /// </summary>
     [JsonPropertyName("text")]
-    public required string Text { get; set; }
+    public string Text { get; set; }
 
     /// <inheritdoc/>
     public override string ToString() => Text ?? "";
@@ -472,7 +472,7 @@ public sealed class ImageContentBlock : ContentBlock
     /// Setting this value will invalidate any cached value of <see cref="DecodedData"/>.
     /// </remarks>
     [JsonPropertyName("data")]
-    public required ReadOnlyMemory<byte> Data
+    public ReadOnlyMemory<byte> Data
     {
         get
         {
@@ -521,7 +521,7 @@ public sealed class ImageContentBlock : ContentBlock
     /// Common values include "image/png" and "image/jpeg".
     /// </remarks>
     [JsonPropertyName("mimeType")]
-    public required string MimeType { get; set; }
+    public string MimeType { get; set; }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private string DebuggerDisplay
@@ -581,7 +581,7 @@ public sealed class AudioContentBlock : ContentBlock
     /// Setting this value will invalidate any cached value of <see cref="DecodedData"/>.
     /// </remarks>
     [JsonPropertyName("data")]
-    public required ReadOnlyMemory<byte> Data
+    public ReadOnlyMemory<byte> Data
     {
         get
         {
@@ -630,7 +630,7 @@ public sealed class AudioContentBlock : ContentBlock
     /// Common values include "audio/wav" and "audio/mp3".
     /// </remarks>
     [JsonPropertyName("mimeType")]
-    public required string MimeType { get; set; }
+    public string MimeType { get; set; }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private string DebuggerDisplay
@@ -664,7 +664,7 @@ public sealed class EmbeddedResourceBlock : ContentBlock
     /// </para>
     /// </remarks>
     [JsonPropertyName("resource")]
-    public required ResourceContents Resource { get; set; }
+    public ResourceContents Resource { get; set; }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private string DebuggerDisplay => $"Uri = \"{Resource.Uri}\"";
@@ -685,13 +685,13 @@ public sealed class ResourceLinkBlock : ContentBlock
     /// </summary>
     [JsonPropertyName("uri")]
     [StringSyntax(StringSyntaxAttribute.Uri)]
-    public required string Uri { get; set; }
+    public string Uri { get; set; }
 
     /// <summary>
     /// Gets or sets a human-readable name for this resource.
     /// </summary>
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
     /// Gets or sets a title for this resource.
@@ -772,19 +772,19 @@ public sealed class ToolUseContentBlock : ContentBlock
     /// This ID is used to match tool results to their corresponding tool uses.
     /// </remarks>
     [JsonPropertyName("id")]
-    public required string Id { get; set; }
+    public string Id { get; set; }
 
     /// <summary>
     /// Gets or sets the name of the tool to call.
     /// </summary>
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
     /// Gets or sets the arguments to pass to the tool, conforming to the tool's input schema.
     /// </summary>
     [JsonPropertyName("input")]
-    public required JsonElement Input { get; set; }
+    public JsonElement Input { get; set; }
 }
 
 /// <summary>Represents the result of a tool use, provided by the user back to the assistant.</summary>
@@ -801,7 +801,7 @@ public sealed class ToolResultContentBlock : ContentBlock
     /// This value must match the ID from a previous <see cref="ToolUseContentBlock"/>.
     /// </remarks>
     [JsonPropertyName("toolUseId")]
-    public required string ToolUseId { get; set; }
+    public string ToolUseId { get; set; }
 
     /// <summary>
     /// Gets or sets the unstructured result content of the tool use.
@@ -811,7 +811,7 @@ public sealed class ToolResultContentBlock : ContentBlock
     /// audio, resource links, and embedded resources.
     /// </remarks>
     [JsonPropertyName("content")]
-    public required IList<ContentBlock> Content { get; set; }
+    public IList<ContentBlock> Content { get; set; }
 
     /// <summary>
     /// Gets or sets an optional structured result object.

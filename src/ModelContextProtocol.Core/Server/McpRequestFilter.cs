@@ -1,4 +1,4 @@
-namespace ModelContextProtocol.Server;
+﻿namespace ModelContextProtocol.Server;
 
 /// <summary>
 /// Delegate type for applying filters to incoming MCP requests with specific parameter and result types.

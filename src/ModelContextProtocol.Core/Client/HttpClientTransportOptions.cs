@@ -1,4 +1,4 @@
-using ModelContextProtocol.Authentication;
+﻿using ModelContextProtocol.Authentication;
 
 namespace ModelContextProtocol.Client;
 
@@ -12,7 +12,7 @@ public sealed class HttpClientTransportOptions
     /// </summary>
     /// <exception cref="ArgumentNullException">The value is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">The value is not an absolute URI, or does not use the HTTP or HTTPS scheme.</exception>
-    public required Uri Endpoint
+    public Uri Endpoint
     {
         get;
         set

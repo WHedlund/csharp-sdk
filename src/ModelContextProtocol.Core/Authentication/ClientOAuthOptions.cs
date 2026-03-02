@@ -1,4 +1,4 @@
-namespace ModelContextProtocol.Authentication;
+﻿namespace ModelContextProtocol.Authentication;
 
 /// <summary>
 /// Provides configuration options for the <see cref="ClientOAuthProvider"/>.
@@ -8,7 +8,7 @@ public sealed class ClientOAuthOptions
     /// <summary>
     /// Gets or sets the OAuth redirect URI.
     /// </summary>
-    public required Uri RedirectUri { get; set; }
+    public Uri RedirectUri { get; set; }
 
     /// <summary>
     /// Gets or sets the OAuth client ID. If not provided, the client will attempt to register dynamically.

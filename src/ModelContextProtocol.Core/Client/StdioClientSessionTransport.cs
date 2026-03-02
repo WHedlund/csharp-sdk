@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Protocol;
 using System.Diagnostics;
 

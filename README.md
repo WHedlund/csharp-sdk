@@ -1,4 +1,4 @@
-# Building MCP for Unity (netstandard2.0 Compatibility)
+# Building MCP for Unity (netstandard2.1 Compatibility)
 
 This document describes how to build a Unity‑compatible version of the ModelContextProtocol (MCP) libraries. It covers feature downgrades, dependency handling, and the final workflow to produce a complete set of DLLs that work inside Unity.
 
@@ -13,7 +13,7 @@ Unity currently supports a subset of modern C# and .NET features. The original M
 This document outlines the full workflow used to:
 
 * Detect and remove incompatible language features
-* Add a `netstandard2.0` build target
+* Add a `netstandard2.1` build target
 * Relax warnings and nullability for Unity builds
 * Ensure all dependencies are copied into the output directory
 * Package the results for Unity
@@ -21,8 +21,8 @@ This document outlines the full workflow used to:
 All final Unity‑ready builds are located in:
 
 ```
-artifacts/bin/ModelContextProtocol/Release/netstandard2.0/
-artifacts/bin/ModelContextProtocol.Core/Release/netstandard2.0/
+artifacts/bin/ModelContextProtocol/Release/netstandard2.1/
+artifacts/bin/ModelContextProtocol.Core/Release/netstandard2.1/
 ```
 
 Copy all DLLs except System.Threading.Tasks.Extensions from these directories into your Unity project.
@@ -71,7 +71,7 @@ internal static class CollectionExtensions
 #elif !NET```
 # 2. Build Commands for Unity
 
-Use the following commands to produce Unity‑compatible builds. These commands relax warnings, disable nullable enforcement, and ensure all dependencies are copied into the output directory.
+Use the following commands to produce Unity‑compatible netstandard2.1 builds. These commands relax warnings, disable nullable enforcement, and ensure all dependencies are copied into the output directory.
 
 ## Build
 ```
@@ -88,14 +88,14 @@ dotnet build src/ModelContextProtocol/ModelContextProtocol.csproj \
 
 # 3. Output Locations
 
-Final Unity‑ready DLLs appear in:
+Final Unity‑ready DLLs (netstandard2.1) appear in:
 
 ```
-artifacts/bin/ModelContextProtocol.Core/Release/netstandard2.0/
-artifacts/bin/ModelContextProtocol/Release/netstandard2.0/
+artifacts/bin/ModelContextProtocol.Core/Release/netstandard2.1/
+artifacts/bin/ModelContextProtocol/Release/netstandard2.1/
 ```
 
-Copy **all** files **except System.Threading.Tasks.Extensions** from both directories into (for example):
+Copy **all** files from both directories into (for example):
 
 ```
 Assets/Plugins/MCP/

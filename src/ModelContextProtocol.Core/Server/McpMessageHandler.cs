@@ -1,4 +1,4 @@
-namespace ModelContextProtocol.Server;
+﻿namespace ModelContextProtocol.Server;
 
 /// <summary>
 /// Delegate type for handling incoming JSON-RPC messages.

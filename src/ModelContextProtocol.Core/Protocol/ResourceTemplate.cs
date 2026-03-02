@@ -1,4 +1,4 @@
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Protocol;
@@ -14,7 +14,7 @@ public sealed class ResourceTemplate : IBaseMetadata
 {
     /// <inheritdoc />
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public string Name { get; set; }
 
     /// <inheritdoc />
     [JsonPropertyName("title")]
@@ -24,7 +24,7 @@ public sealed class ResourceTemplate : IBaseMetadata
     /// Gets or sets the URI template (according to RFC 6570) that can be used to construct resource URIs.
     /// </summary>
     [JsonPropertyName("uriTemplate")]
-    public required string UriTemplate { get; set; }
+    public string UriTemplate { get; set; }
 
     /// <summary>
     /// Gets or sets a description of what this resource template represents.

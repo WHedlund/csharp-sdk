@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Diagnostics;
 using System.Net.Http.Headers;
@@ -460,10 +460,10 @@ internal sealed partial class StreamableHttpClientSessionTransport : TransportBa
     /// <summary>
     /// Represents the result of processing an SSE response.
     /// </summary>
-    private readonly struct SseResponse
+    private struct SseResponse
     {
-        public JsonRpcMessageWithId? Response { get; init; }
-        public bool IsNetworkError { get; init; }
+        public JsonRpcMessageWithId? Response { get; set; }
+        public bool IsNetworkError { get; set; }
     }
 
     private static TimeSpan ElapsedSince(long stopwatchTimestamp)

@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
@@ -75,7 +75,7 @@ public sealed class ElicitRequestParams : RequestParams
     /// For url mode, this explains why the user needs to navigate to the URL.
     /// </remarks>
     [JsonPropertyName("message")]
-    public required string Message { get; set; }
+    public string Message { get; set; }
 
     /// <summary>
     /// Gets or sets the requested schema for form mode elicitation.
@@ -880,11 +880,11 @@ public sealed class ElicitRequestParams : RequestParams
     {
         /// <summary>Gets or sets the constant value for this option.</summary>
         [JsonPropertyName("const")]
-        public required string Const { get; set; }
+        public string Const { get; set; }
 
         /// <summary>Gets or sets the display title for this option.</summary>
         [JsonPropertyName("title")]
-        public required string Title { get; set; }
+        public string Title { get; set; }
     }
 
     /// <summary>
@@ -935,7 +935,7 @@ public sealed class ElicitRequestParams : RequestParams
 
         /// <summary>Gets or sets the list of allowed string values.</summary>
         [JsonPropertyName("enum")]
-        public required IList<string> Enum { get; set; }
+        public IList<string> Enum { get; set; }
     }
 
     /// <summary>
@@ -945,7 +945,7 @@ public sealed class ElicitRequestParams : RequestParams
     {
         /// <summary>Gets or sets the list of enum options with constant values and display titles.</summary>
         [JsonPropertyName("anyOf")]
-        public required IList<EnumSchemaOption> AnyOf { get; set; }
+        public IList<EnumSchemaOption> AnyOf { get; set; }
     }
 
     /// <summary>
@@ -977,7 +977,7 @@ public sealed class ElicitRequestParams : RequestParams
 
         /// <summary>Gets or sets the schema for items in the array.</summary>
         [JsonPropertyName("items")]
-        public required UntitledEnumItemsSchema Items { get; set; }
+        public UntitledEnumItemsSchema Items { get; set; }
 
         /// <summary>Gets or sets the default values for the enum.</summary>
         [JsonPropertyName("default")]
@@ -1013,7 +1013,7 @@ public sealed class ElicitRequestParams : RequestParams
 
         /// <summary>Gets or sets the schema for items in the array.</summary>
         [JsonPropertyName("items")]
-        public required TitledEnumItemsSchema Items { get; set; }
+        public TitledEnumItemsSchema Items { get; set; }
 
         /// <summary>Gets or sets the default values for the enum.</summary>
         [JsonPropertyName("default")]

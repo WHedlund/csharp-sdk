@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Protocol;
@@ -16,7 +16,7 @@ public sealed class GetPromptRequestParams : RequestParams
     /// Gets or sets the name of the prompt.
     /// </summary>
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
     /// Gets or sets arguments to use for templating the prompt when retrieving it from the server.

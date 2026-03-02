@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Authentication;
 
@@ -11,7 +11,7 @@ internal sealed class TokenResponse
     /// Gets or sets the access token.
     /// </summary>
     [JsonPropertyName("access_token")]
-    public required string AccessToken { get; set; }
+    public string AccessToken { get; set; }
 
     /// <summary>
     /// Gets or sets the refresh token.
@@ -29,7 +29,7 @@ internal sealed class TokenResponse
     /// Gets or sets the token type (typically "Bearer").
     /// </summary>
     [JsonPropertyName("token_type")]
-    public required string TokenType { get; set; }
+    public string TokenType { get; set; }
 
     /// <summary>
     /// Gets or sets the scope of the access token.

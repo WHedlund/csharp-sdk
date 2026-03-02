@@ -1,4 +1,4 @@
-using ModelContextProtocol.Client;
+﻿using ModelContextProtocol.Client;
 using ModelContextProtocol.Protocol;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -560,7 +560,7 @@ internal sealed partial class ClientOAuthProvider : McpHttpClient
         var clientId = GetClientIdOrThrow();
         if (string.Equals(_tokenEndpointAuthMethod, "client_secret_basic", StringComparison.Ordinal))
         {
-            // Per RFC 6749 §2.3.1: send client_id:client_secret as HTTP Basic auth.
+            // Per RFC 6749 Â§2.3.1: send client_id:client_secret as HTTP Basic auth.
             request.Headers.Authorization = new(
                 "Basic",
                 Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Uri.EscapeDataString(clientId)}:{Uri.EscapeDataString(_clientSecret ?? string.Empty)}")));
@@ -895,7 +895,7 @@ internal sealed partial class ClientOAuthProvider : McpHttpClient
 
         foreach (var part in parameters.Split(','))
         {
-            var trimmedPart = part.AsSpan().Trim();
+            var trimmedPart = part.Trim();
             int equalsIndex = trimmedPart.IndexOf('=');
 
             if (equalsIndex <= 0)
@@ -903,17 +903,17 @@ internal sealed partial class ClientOAuthProvider : McpHttpClient
                 continue;
             }
 
-            var key = trimmedPart[..equalsIndex].Trim();
+            var key = trimmedPart.Substring(0, equalsIndex).Trim();
 
             if (key.Equals(parameterName, StringComparison.OrdinalIgnoreCase))
             {
-                var value = trimmedPart[(equalsIndex + 1)..].Trim();
-                if (value.Length > 0 && value[0] == '"' && value[^1] == '"')
+                var value = trimmedPart.Substring(equalsIndex + 1).Trim();
+                if (value.Length > 0 && value[0] == '"' && value[value.Length - 1] == '"')
                 {
-                    value = value[1..^1];
+                    value = value.Substring(1, value.Length - 2);
                 }
 
-                return value.ToString();
+                return value;
             }
         }
 

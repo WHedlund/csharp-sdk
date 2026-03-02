@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Protocol;
@@ -30,5 +30,5 @@ public sealed class ListTasksResult : PaginatedResult
     /// Gets or sets the list of tasks.
     /// </summary>
     [JsonPropertyName("tasks")]
-    public required IList<McpTask> Tasks { get; set; }
+    public IList<McpTask> Tasks { get; set; }
 }

@@ -1,4 +1,4 @@
-using ModelContextProtocol.Protocol;
+﻿using ModelContextProtocol.Protocol;
 using System.Buffers;
 using System.Net.ServerSentEvents;
 using System.Text.Json;

@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace ModelContextProtocol;
@@ -22,8 +22,8 @@ internal static class ProcessHelper
     /// </remarks>
     public static void KillTree(this Process process, TimeSpan timeout)
     {
-#if NETSTANDARD2_0
-        // Process.Kill(entireProcessTree) is not available on .NET Standard 2.0.
+#if NETSTANDARD
+        // Process.Kill(entireProcessTree) is not available on .NET Standard.
         // Use platform-specific commands to kill the process tree.
         var pid = process.Id;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -63,7 +63,7 @@ internal static class ProcessHelper
         process.WaitForExit((int)timeout.TotalMilliseconds);
     }
 
-#if NETSTANDARD2_0
+#if NETSTANDARD
     private static void GetAllChildIdsUnix(int parentId, ISet<int> children, TimeSpan timeout)
     {
         int exitcode = RunProcessAndWaitForExit("pgrep", $"-P {parentId}", timeout, out var stdout);

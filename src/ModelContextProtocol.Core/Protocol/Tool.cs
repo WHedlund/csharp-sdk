@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -14,7 +14,7 @@ public sealed class Tool : IBaseMetadata
 {
     /// <inheritdoc />
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public string Name { get; set; }
 
     /// <inheritdoc />
     [JsonPropertyName("title")]

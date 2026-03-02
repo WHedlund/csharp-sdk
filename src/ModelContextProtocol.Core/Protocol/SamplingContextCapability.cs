@@ -1,4 +1,4 @@
-namespace ModelContextProtocol.Protocol;
+﻿namespace ModelContextProtocol.Protocol;
 
 /// <summary>
 /// Represents the sampling context capability.

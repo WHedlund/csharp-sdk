@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
@@ -15,7 +15,7 @@ public sealed class Prompt : IBaseMetadata
 {
     /// <inheritdoc />
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public string Name { get; set; }
 
     /// <inheritdoc />
     [JsonPropertyName("title")]

@@ -1,4 +1,4 @@
-namespace ModelContextProtocol;
+﻿namespace ModelContextProtocol;
 
 /// <summary>
 /// Provides a progress value that can be sent using <see cref="IProgress{ProgressNotificationValue}"/>.
@@ -18,11 +18,11 @@ public sealed class ProgressNotificationValue
     /// when representing completed items in combination with the <see cref="Total"/> property.
     /// </para>
     /// </remarks>
-    public required float Progress { get; init; }
+    public float Progress { get; set; }
 
     /// <summary>Gets or initializes the total number of items to process (or total progress required), if known.</summary>
-    public float? Total { get; init; }
+    public float? Total { get; set; }
 
     /// <summary>Gets or initializes an optional message describing the current progress.</summary>
-    public string? Message { get; init; }
+    public string? Message { get; set; }
 }

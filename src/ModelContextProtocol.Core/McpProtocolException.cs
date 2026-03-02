@@ -1,4 +1,4 @@
-namespace ModelContextProtocol;
+﻿namespace ModelContextProtocol;
 
 /// <summary>
 /// Represents an exception that is thrown when a Model Context Protocol (MCP) protocol-level error occurs.

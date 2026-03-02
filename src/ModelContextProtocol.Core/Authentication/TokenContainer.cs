@@ -1,4 +1,4 @@
-namespace ModelContextProtocol.Authentication;
+﻿namespace ModelContextProtocol.Authentication;
 
 /// <summary>
 /// Represents a cacheable combination of tokens ready to be used for authentication.
@@ -8,12 +8,12 @@ public sealed class TokenContainer
     /// <summary>
     /// Gets or sets the token type (typically "Bearer").
     /// </summary>
-    public required string TokenType { get; set; }
+    public string TokenType { get; set; }
 
     /// <summary>
     /// Gets or sets the access token.
     /// </summary>
-    public required string AccessToken { get; set; }
+    public string AccessToken { get; set; }
 
     /// <summary>
     /// Gets or sets the refresh token.
@@ -33,7 +33,7 @@ public sealed class TokenContainer
     /// <summary>
     /// Gets or sets the timestamp when the token was obtained.
     /// </summary>
-    public required DateTimeOffset ObtainedAt { get; set; }
+    public DateTimeOffset ObtainedAt { get; set; }
 
     internal bool IsExpired => ExpiresIn is not null && DateTimeOffset.UtcNow >= ObtainedAt.AddSeconds(ExpiresIn.Value);
 }

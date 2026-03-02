@@ -1,4 +1,4 @@
-namespace ModelContextProtocol.Protocol;
+﻿namespace ModelContextProtocol.Protocol;
 
 /// <summary>
 /// Represents the parameters used with a <see cref="RequestMethods.RootsList"/> request from a server to request

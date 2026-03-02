@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Protocol;
 
@@ -21,7 +21,7 @@ public sealed class Implementation : IBaseMetadata
 {
     /// <inheritdoc />
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public string Name { get; set; }
 
     /// <inheritdoc />
     [JsonPropertyName("title")]
@@ -35,7 +35,7 @@ public sealed class Implementation : IBaseMetadata
     /// which can be important for troubleshooting compatibility issues or when reporting bugs.
     /// </remarks>
     [JsonPropertyName("version")]
-    public required string Version { get; set; }
+    public string Version { get; set; }
 
     /// <summary>
     /// Gets or sets an optional description of the implementation.

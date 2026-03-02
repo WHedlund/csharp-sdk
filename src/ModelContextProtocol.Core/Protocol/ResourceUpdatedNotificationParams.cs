@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Protocol;
@@ -27,5 +27,5 @@ public sealed class ResourceUpdatedNotificationParams : NotificationParams
     /// </remarks>
     [JsonPropertyName("uri")]
     [StringSyntax(StringSyntaxAttribute.Uri)]
-    public required string Uri { get; set; }
+    public string Uri { get; set; }
 }

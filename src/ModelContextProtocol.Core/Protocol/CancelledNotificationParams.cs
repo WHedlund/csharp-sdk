@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Protocol;
 
@@ -20,7 +20,7 @@ public sealed class CancelledNotificationParams : NotificationParams
     /// This value must match the ID of an in-flight request that the sender wishes to cancel.
     /// </remarks>
     [JsonPropertyName("requestId")]
-    public required RequestId RequestId { get; set; }
+    public RequestId RequestId { get; set; }
 
     /// <summary>
     /// Gets or sets an optional string describing the reason for the cancellation request.

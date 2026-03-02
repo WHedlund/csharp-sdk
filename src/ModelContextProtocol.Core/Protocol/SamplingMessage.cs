@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
@@ -35,7 +35,7 @@ public sealed class SamplingMessage
     /// </summary>
     [JsonPropertyName("content")]
     [JsonConverter(typeof(SingleItemOrListConverter<ContentBlock>))]
-    public required IList<ContentBlock> Content { get; set; }
+    public IList<ContentBlock> Content { get; set; }
 
     /// <summary>
     /// Gets or sets the role of the message sender.

@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using ModelContextProtocol.Protocol;
 using System.Diagnostics;
@@ -67,7 +67,19 @@ public sealed partial class StdioClientTransport : IClientTransport
         {
             // On Windows, for stdio, we need to wrap non-shell commands with cmd.exe /c {command} (usually npx or uvicorn).
             // The stdio transport will not work correctly if the command is not run in a shell.
-            arguments = arguments is null or [] ? ["/c", command] : ["/c", command, ..arguments];
+            if (arguments is null || arguments.Count == 0)
+            {
+                arguments = new List<string> { "/c", command };
+            }
+            else
+            {
+                var newArgs = new List<string>(arguments.Count + 2) { "/c", command };
+                foreach (string arg in arguments)
+                {
+                    newArgs.Add(arg);
+                }
+                arguments = newArgs;
+            }
             command = "cmd.exe";
         }
 

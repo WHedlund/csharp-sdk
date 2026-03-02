@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using ModelContextProtocol.Protocol;
 
 namespace ModelContextProtocol.Server;

@@ -1,4 +1,4 @@
-namespace ModelContextProtocol.Protocol;
+﻿namespace ModelContextProtocol.Protocol;
 
 /// <summary>
 /// Represents the result of a <see cref="RequestMethods.Ping"/> request in the Model Context Protocol.

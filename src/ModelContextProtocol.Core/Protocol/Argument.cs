@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Protocol;
 
@@ -15,7 +15,7 @@ public sealed class Argument
     /// Gets or sets the name of the argument being completed.
     /// </summary>
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
     /// Gets or sets the current partial text value for which completion suggestions are requested.
@@ -25,5 +25,5 @@ public sealed class Argument
     /// options should be generated.
     /// </remarks>
     [JsonPropertyName("value")]
-    public required string Value { get; set; }
+    public string Value { get; set; }
 }

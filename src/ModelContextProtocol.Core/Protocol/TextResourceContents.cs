@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Protocol;
@@ -27,7 +27,7 @@ public sealed class TextResourceContents : ResourceContents
     /// Gets or sets the text of the item.
     /// </summary>
     [JsonPropertyName("text")]
-    public required string Text { get; set; }
+    public string Text { get; set; }
 
     /// <inheritdoc/>
     public override string ToString() => Text ?? "";

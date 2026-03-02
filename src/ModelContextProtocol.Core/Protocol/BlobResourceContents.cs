@@ -1,4 +1,4 @@
-using System.Buffers;
+﻿using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -63,7 +63,7 @@ public sealed class BlobResourceContents : ResourceContents
     /// Setting this value will invalidate any cached value of <see cref="DecodedData"/>.
     /// </remarks>
     [JsonPropertyName("blob")]
-    public required ReadOnlyMemory<byte> Blob
+    public ReadOnlyMemory<byte> Blob
     {
         get
         {

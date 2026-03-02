@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Protocol;
@@ -18,7 +18,7 @@ public sealed class GetTaskRequestParams : RequestParams
     /// Gets or sets the unique identifier of the task to retrieve.
     /// </summary>
     [JsonPropertyName("taskId")]
-    public required string TaskId { get; set; }
+    public string TaskId { get; set; }
 }
 
 /// <summary>
@@ -35,13 +35,13 @@ public sealed class GetTaskResult : Result
     /// Gets or sets the task ID.
     /// </summary>
     [JsonPropertyName("taskId")]
-    public required string TaskId { get; set; }
+    public string TaskId { get; set; }
 
     /// <summary>
     /// Gets or sets the current status of the task.
     /// </summary>
     [JsonPropertyName("status")]
-    public required McpTaskStatus Status { get; set; }
+    public McpTaskStatus Status { get; set; }
 
     /// <summary>
     /// Gets or sets an optional human-readable message describing the current state.
@@ -53,13 +53,13 @@ public sealed class GetTaskResult : Result
     /// Gets or sets the ISO 8601 timestamp when the task was created.
     /// </summary>
     [JsonPropertyName("createdAt")]
-    public required DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
 
     /// <summary>
     /// Gets or sets the ISO 8601 timestamp when the task status was last updated.
     /// </summary>
     [JsonPropertyName("lastUpdatedAt")]
-    public required DateTimeOffset LastUpdatedAt { get; set; }
+    public DateTimeOffset LastUpdatedAt { get; set; }
 
     /// <summary>
     /// Gets or sets the time to live (retention duration) from creation before the task may be deleted.

@@ -1,4 +1,4 @@
-using ModelContextProtocol.Protocol;
+﻿using ModelContextProtocol.Protocol;
 using System.Net.ServerSentEvents;
 using System.Security.Claims;
 using System.Threading.Channels;

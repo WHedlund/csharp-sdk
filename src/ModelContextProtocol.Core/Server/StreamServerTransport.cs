@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using ModelContextProtocol.Protocol;
 using System.Text;
@@ -20,7 +20,11 @@ public class StreamServerTransport : TransportBase
 
     private readonly ILogger _logger;
 
+#if NET
     private readonly TextReader _inputReader;
+#else
+    private readonly CancellableStreamReader _inputReader;
+#endif
     private readonly Stream _outputStream;
 
     private readonly SemaphoreSlim _sendLock = new(1, 1);

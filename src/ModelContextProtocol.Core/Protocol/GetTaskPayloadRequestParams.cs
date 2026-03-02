@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Protocol;
@@ -23,5 +23,5 @@ public sealed class GetTaskPayloadRequestParams : RequestParams
     /// Gets or sets the unique identifier of the task whose result to retrieve.
     /// </summary>
     [JsonPropertyName("taskId")]
-    public required string TaskId { get; set; }
+    public string TaskId { get; set; }
 }

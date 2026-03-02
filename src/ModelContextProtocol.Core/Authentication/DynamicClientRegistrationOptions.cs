@@ -1,4 +1,4 @@
-namespace ModelContextProtocol.Authentication;
+﻿namespace ModelContextProtocol.Authentication;
 
 /// <summary>
 /// Provides configuration options for the <see cref="ClientOAuthProvider"/> related to dynamic client registration (RFC 7591).

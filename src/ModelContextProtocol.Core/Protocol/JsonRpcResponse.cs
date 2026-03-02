@@ -1,4 +1,4 @@
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Protocol;
@@ -25,5 +25,5 @@ public sealed class JsonRpcResponse : JsonRpcMessageWithId
     /// This property contains the result data returned by the server in response to the JSON-RPC method request.
     /// </remarks>
     [JsonPropertyName("result")]
-    public required JsonNode? Result { get; set; }
+    public JsonNode? Result { get; set; }
 }

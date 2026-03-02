@@ -1,4 +1,4 @@
-using System.Buffers;
+﻿using System.Buffers;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -41,7 +41,7 @@ public abstract class ResourceContents
     /// </summary>
     [JsonPropertyName("uri")]
     [StringSyntax(StringSyntaxAttribute.Uri)]
-    public required string Uri { get; set; }
+    public string Uri { get; set; }
 
     /// <summary>
     /// Gets or sets the MIME type of the resource content.

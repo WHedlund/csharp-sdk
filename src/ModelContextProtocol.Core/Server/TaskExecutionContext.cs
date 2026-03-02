@@ -1,4 +1,4 @@
-namespace ModelContextProtocol.Server;
+﻿namespace ModelContextProtocol.Server;
 
 /// <summary>
 /// Represents the execution context for a task being executed by the server.
@@ -23,25 +23,25 @@ internal sealed class TaskExecutionContext
     /// <summary>
     /// Gets the task ID of the currently executing task.
     /// </summary>
-    public required string TaskId { get; init; }
+    public string TaskId { get; set; }
 
     /// <summary>
     /// Gets the session ID associated with the task.
     /// </summary>
-    public string? SessionId { get; init; }
+    public string? SessionId { get; set; }
 
     /// <summary>
     /// Gets the task store used to persist task state.
     /// </summary>
-    public required IMcpTaskStore TaskStore { get; init; }
+    public IMcpTaskStore TaskStore { get; set; }
 
     /// <summary>
     /// Gets whether task status notifications should be sent.
     /// </summary>
-    public bool SendNotifications { get; init; }
+    public bool SendNotifications { get; set; }
 
     /// <summary>
     /// Gets or sets the function to call when sending a task status notification.
     /// </summary>
-    public Func<Protocol.McpTask, CancellationToken, Task>? NotifyTaskStatusFunc { get; init; }
+    public Func<Protocol.McpTask, CancellationToken, Task>? NotifyTaskStatusFunc { get; set; }
 }

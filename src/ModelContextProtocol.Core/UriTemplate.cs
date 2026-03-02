@@ -72,7 +72,7 @@ internal static partial class UriTemplate
         int lastIndex = 0;
         for (Match m = UriTemplateExpression().Match(uriTemplate); m.Success; m = m.NextMatch())
         {
-            pattern.AppendFormatted(Regex.Escape(uriTemplate[lastIndex..m.Index]));
+            pattern.AppendFormatted(Regex.Escape(uriTemplate.Substring(lastIndex, m.Index - lastIndex)));
             lastIndex = m.Index + m.Length;
 
             var captures = m.Groups["varname"].Captures;

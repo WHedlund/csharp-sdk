@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -16,7 +16,7 @@ public sealed class Resource : IBaseMetadata
 {
     /// <inheritdoc />
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public string Name { get; set; }
 
     /// <inheritdoc />
     [JsonPropertyName("title")]
@@ -27,7 +27,7 @@ public sealed class Resource : IBaseMetadata
     /// </summary>
     [JsonPropertyName("uri")]
     [StringSyntax(StringSyntaxAttribute.Uri)]
-    public required string Uri { get; set; }
+    public string Uri { get; set; }
 
     /// <summary>
     /// Gets or sets a description of what this resource represents.

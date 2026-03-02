@@ -1,4 +1,4 @@
-using ModelContextProtocol.Client;
+﻿using ModelContextProtocol.Client;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -165,7 +165,7 @@ public sealed class PromptReference : Reference, IBaseMetadata
 
     /// <inheritdoc />
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public string Name { get; set; }
 
     /// <inheritdoc />
     [JsonPropertyName("title")]
@@ -188,7 +188,7 @@ public sealed class ResourceTemplateReference : Reference
     /// </summary>
     [JsonPropertyName("uri")]
     [StringSyntax(StringSyntaxAttribute.Uri)]
-    public required string? Uri { get; set; }
+    public string? Uri { get; set; }
 
     /// <inheritdoc />
     public override string ToString() => $"\"{Type}\": \"{Uri}\"";

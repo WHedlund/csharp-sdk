@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging.Abstractions;
+﻿using Microsoft.Extensions.Logging.Abstractions;
 using System.ComponentModel;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -29,7 +29,7 @@ public sealed class ProgressNotificationParams : NotificationParams
     /// correlate the notifications with the original request.
     /// </para>
     /// </remarks>
-    public required ProgressToken ProgressToken { get; set; }
+    public ProgressToken ProgressToken { get; set; }
 
     /// <summary>
     /// Gets or sets the progress thus far.
@@ -37,7 +37,7 @@ public sealed class ProgressNotificationParams : NotificationParams
     /// <remarks>
     /// This value should increase for each notification issued as part of the same request, even if the total is unknown.
     /// </remarks>
-    public required ProgressNotificationValue Progress { get; set; }
+    public ProgressNotificationValue Progress { get; set; }
 
     /// <summary>
     /// Provides a <see cref="JsonConverter"/> for <see cref="ProgressNotificationParams"/>.

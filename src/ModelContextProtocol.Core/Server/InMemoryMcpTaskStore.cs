@@ -1,4 +1,4 @@
-using ModelContextProtocol.Protocol;
+﻿using ModelContextProtocol.Protocol;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
@@ -488,19 +488,19 @@ public sealed class InMemoryMcpTaskStore : IMcpTaskStore, IDisposable
     private sealed class TaskEntry
     {
         // Flattened McpTask properties
-        public required string TaskId { get; init; }
-        public required McpTaskStatus Status { get; init; }
-        public string? StatusMessage { get; init; }
-        public required DateTimeOffset CreatedAt { get; init; }
-        public required DateTimeOffset LastUpdatedAt { get; init; }
-        public TimeSpan? TimeToLive { get; init; }
-        public TimeSpan? PollInterval { get; init; }
+        public string TaskId { get; set; }
+        public McpTaskStatus Status { get; set; }
+        public string? StatusMessage { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset LastUpdatedAt { get; set; }
+        public TimeSpan? TimeToLive { get; set; }
+        public TimeSpan? PollInterval { get; set; }
 
         // Request metadata
-        public required RequestId RequestId { get; init; }
-        public required JsonRpcRequest Request { get; init; }
-        public required string? SessionId { get; init; }
-        public JsonElement? StoredResult { get; init; }
+        public RequestId RequestId { get; set; }
+        public JsonRpcRequest Request { get; set; }
+        public string? SessionId { get; set; }
+        public JsonElement? StoredResult { get; set; }
 
         /// <summary>
         /// Copy constructor for creating modified copies.

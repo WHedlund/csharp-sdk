@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Protocol;
@@ -48,7 +48,7 @@ public sealed class Icon
     /// </para>
     /// </remarks>
     [JsonPropertyName("src")]
-    public required string Source { get; set; }
+    public string Source { get; set; }
 
     /// <summary>
     /// Gets or sets the optional MIME type of the icon.

@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
@@ -20,7 +20,7 @@ public sealed class Root
     /// </summary>
     [JsonPropertyName("uri")]
     [StringSyntax(StringSyntaxAttribute.Uri)]
-    public required string Uri { get; set; }
+    public string Uri { get; set; }
 
     /// <summary>
     /// Gets or sets a human-readable name for the root.

@@ -1,4 +1,4 @@
-namespace ModelContextProtocol;
+﻿namespace ModelContextProtocol;
 
 internal static class SynchronizationExtensions
 {

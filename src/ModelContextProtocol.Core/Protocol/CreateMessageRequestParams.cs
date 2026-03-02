@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
@@ -43,7 +43,7 @@ public sealed class CreateMessageRequestParams : RequestParams
     /// </para>
     /// </remarks>
     [JsonPropertyName("maxTokens")]
-    public required int MaxTokens { get; set; }
+    public int MaxTokens { get; set; }
 
     /// <summary>
     /// Gets or sets the messages requested by the server to be included in the prompt.

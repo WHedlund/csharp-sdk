@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Protocol;
 using System.Text;
 using System.Text.Json;
@@ -12,7 +12,11 @@ internal class StreamClientSessionTransport : TransportBase
 
     internal static UTF8Encoding NoBomUtf8Encoding { get; } = new(encoderShouldEmitUTF8Identifier: false);
 
+#if NET
     private readonly TextReader _serverOutput;
+#else
+    private readonly CancellableStreamReader _serverOutput;
+#endif
     private readonly Stream _serverInputStream;
     private readonly SemaphoreSlim _sendLock = new(1, 1);
     private CancellationTokenSource? _shutdownCts = new();

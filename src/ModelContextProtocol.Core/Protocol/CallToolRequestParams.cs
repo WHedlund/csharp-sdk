@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -15,7 +15,7 @@ public sealed class CallToolRequestParams : RequestParams
 {
     /// <summary>Gets or sets the name of the tool to invoke.</summary>
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
     /// Gets or sets optional arguments to pass to the tool when invoking it on the server.

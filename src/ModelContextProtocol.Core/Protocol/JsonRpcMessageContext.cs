@@ -1,4 +1,4 @@
-using ModelContextProtocol.Server;
+﻿using ModelContextProtocol.Server;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
 

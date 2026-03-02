@@ -1,4 +1,4 @@
-using ModelContextProtocol.Protocol;
+﻿using ModelContextProtocol.Protocol;
 using System.Net.ServerSentEvents;
 
 namespace ModelContextProtocol.Server;

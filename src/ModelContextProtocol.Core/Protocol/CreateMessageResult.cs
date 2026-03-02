@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace ModelContextProtocol.Protocol;
 
@@ -18,7 +18,7 @@ public sealed class CreateMessageResult : Result
     /// </remarks>
     [JsonPropertyName("content")]
     [JsonConverter(typeof(SingleItemOrListConverter<ContentBlock>))]
-    public required IList<ContentBlock> Content { get; set; }
+    public IList<ContentBlock> Content { get; set; }
 
     /// <summary>
     /// Gets or sets the name of the model that generated the message.
@@ -33,7 +33,7 @@ public sealed class CreateMessageResult : Result
     /// </para>
     /// </remarks>
     [JsonPropertyName("model")]
-    public required string Model { get; set; }
+    public string Model { get; set; }
 
     /// <summary>
     /// Gets or sets the reason why message generation (sampling) stopped, if known.
