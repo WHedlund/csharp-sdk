@@ -1,0 +1,14 @@
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\obj\ModelContextProtocol.Core\Release\netstandard2.1\ModelContextProtocol.Core.csproj.AssemblyReference.cache
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\obj\ModelContextProtocol.Core\Release\netstandard2.1\ModelContextProtocol.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\obj\ModelContextProtocol.Core\Release\netstandard2.1\ModelContextProtocol.Core.AssemblyInfoInputs.cache
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\obj\ModelContextProtocol.Core\Release\netstandard2.1\ModelContextProtocol.Core.AssemblyInfo.cs
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\obj\ModelContextProtocol.Core\Release\netstandard2.1\ModelContextProtocol.Core.csproj.CoreCompileInputs.cache
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\obj\ModelContextProtocol.Core\Release\netstandard2.1\ModelContextProtocol.Core.sourcelink.json
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\bin\ModelContextProtocol.Core\Release\netstandard2.1\ModelContextProtocol.Core.deps.json
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\bin\ModelContextProtocol.Core\Release\netstandard2.1\ModelContextProtocol.Core.dll
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\bin\ModelContextProtocol.Core\Release\netstandard2.1\ModelContextProtocol.Core.pdb
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\bin\ModelContextProtocol.Core\Release\netstandard2.1\ModelContextProtocol.Core.xml
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\obj\ModelContextProtocol.Core\Release\netstandard2.1\ModelCon.98893BD1.Up2Date
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\obj\ModelContextProtocol.Core\Release\netstandard2.1\ModelContextProtocol.Core.dll
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\obj\ModelContextProtocol.Core\Release\netstandard2.1\ModelContextProtocol.Core.xml
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\obj\ModelContextProtocol.Core\Release\netstandard2.1\ModelContextProtocol.Core.pdb

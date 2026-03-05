@@ -9,9 +9,9 @@ Adapters for the official MCP C# SDK to make it work inside Unity, including dis
 - `UnityMcpDispatcher`: Simple main-thread dispatcher to safely run Unity API work coming from background threads (used by tool/resource filters).
 
 ### Samples and Tests
-- `Samples/`: Example MonoBehaviours that define tools/resources (e.g., camera resources).
+- `Samples/`: Example MonoBehaviours that define tools/resources (e.g., camera resources, LLM sampling).
 - `Tests/TestMcpDiscovery`: Logs discovered tools/resources/prompts for an assigned provider.
-- `Tests/TestMcpInvocation`: In-memory transport test that exercises discovery, tool calls, and resource reads.
+- `Tests/TestMcpInvocation`: In-memory transport test that exercises discovery, tool calls, and resource reads. Tool calls are skipped if a tool is not present.
 - `Tests/TestHttpNotifications`: Starts the HTTP host, connects a client, and verifies server->client notifications.
 
 ### Notes

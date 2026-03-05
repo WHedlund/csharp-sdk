@@ -9,7 +9,8 @@ using UnityEngine;
 public class McpObjectDefinitionProvider : MonoBehaviour
 {
     [Tooltip("Logical id of this object for namespacing tools/resources/prompts.")]
-    public string objectId = "gameobject";
+    public string objectId = "";
+    public bool noToolPrefix = true;
 
     private IReadOnlyList<McpServerTool> tools;
     private IReadOnlyList<McpServerResource> resources;
@@ -38,7 +39,7 @@ public class McpObjectDefinitionProvider : MonoBehaviour
         if (tools != null && resources != null && prompts != null)
             return;
 
-        string prefix = string.IsNullOrWhiteSpace(objectId) ? name : objectId;
+        string prefix = noToolPrefix ? null : string.IsNullOrWhiteSpace(objectId) ? name : objectId;
 
         tools = UnityMcpDiscovery.DiscoverToolsInHierarchy(gameObject, prefix);
         resources = UnityMcpDiscovery.DiscoverResourcesInHierarchy(gameObject, prefix);

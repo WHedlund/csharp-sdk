@@ -1,0 +1,14 @@
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\bin\ModelContextProtocol\Release\netstandard2.0\ModelContextProtocol.deps.json
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\bin\ModelContextProtocol\Release\netstandard2.0\ModelContextProtocol.dll
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\bin\ModelContextProtocol\Release\netstandard2.0\ModelContextProtocol.pdb
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\bin\ModelContextProtocol\Release\netstandard2.0\ModelContextProtocol.xml
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\obj\ModelContextProtocol\Release\netstandard2.0\ModelContextProtocol.csproj.AssemblyReference.cache
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\obj\ModelContextProtocol\Release\netstandard2.0\ModelContextProtocol.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\obj\ModelContextProtocol\Release\netstandard2.0\ModelContextProtocol.AssemblyInfoInputs.cache
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\obj\ModelContextProtocol\Release\netstandard2.0\ModelContextProtocol.AssemblyInfo.cs
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\obj\ModelContextProtocol\Release\netstandard2.0\ModelContextProtocol.csproj.CoreCompileInputs.cache
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\obj\ModelContextProtocol\Release\netstandard2.0\ModelContextProtocol.sourcelink.json
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\obj\ModelContextProtocol\Release\netstandard2.0\ModelCon.0E7488A5.Up2Date
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\obj\ModelContextProtocol\Release\netstandard2.0\ModelContextProtocol.dll
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\obj\ModelContextProtocol\Release\netstandard2.0\ModelContextProtocol.xml
+C:\Users\PC100223925\Desktop\temp\csharp-sdk\artifacts\obj\ModelContextProtocol\Release\netstandard2.0\ModelContextProtocol.pdb

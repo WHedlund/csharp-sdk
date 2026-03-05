@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.AI;
 using ModelContextProtocol;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
@@ -323,7 +321,8 @@ public sealed class HttpStreamableListenerServer
             FlowExecutionContextFromRequests = true,
         };
 
-        var options = await BuildOptionsAsync(binding.Provider).ConfigureAwait(false);
+        var sessionSubscriptions = new ConcurrentDictionary<string, bool>(StringComparer.Ordinal);
+        var options = await BuildOptionsAsync(binding.Provider, sessionSubscriptions).ConfigureAwait(false);
         var server = McpServer.Create(transport, options);
 
         var sessionCts = CancellationTokenSource.CreateLinkedTokenSource(_cts.Token);
@@ -339,7 +338,7 @@ public sealed class HttpStreamableListenerServer
             }
         }, sessionCts.Token);
 
-        return new Session(binding.ServerId, sessionId, transport, server, sessionCts, runTask);
+        return new Session(binding.ServerId, sessionId, transport, server, sessionCts, runTask, sessionSubscriptions);
     }
 
     /// <summary>
@@ -362,13 +361,55 @@ public sealed class HttpStreamableListenerServer
         }
     }
 
-    private static Task<McpServerOptions> BuildOptionsAsync(McpObjectDefinitionProvider provider)
+    /// <summary>
+    /// Sends a resource-updated notification to sessions bound to the specified serverId that subscribed to the URI.
+    /// </summary>
+    public async Task NotifyResourceUpdatedAsync(string uri, string serverId, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(uri)) throw new ArgumentNullException(nameof(uri));
+        if (string.IsNullOrWhiteSpace(serverId)) throw new ArgumentNullException(nameof(serverId));
+
+        var snapshot = _sessions.Values.ToArray();
+
+        foreach (var session in snapshot)
+        {
+            if (!string.Equals(session.ServerId, serverId, StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            if (!session.SubscribedResources.ContainsKey(uri))
+            {
+                continue;
+            }
+
+            try
+            {
+                await session.Server.SendNotificationAsync(
+                    NotificationMethods.ResourceUpdatedNotification,
+                    new ResourceUpdatedNotificationParams { Uri = uri }, 
+                    cancellationToken: cancellationToken ).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                LogError($"Sending resource update '{uri}' to session {session.Id} failed", ex);
+            }
+        }
+    }
+
+    private static Task<McpServerOptions> BuildOptionsAsync(McpObjectDefinitionProvider provider, ConcurrentDictionary<string, bool> sessionSubscriptions)
     {
         // Unity components must be touched on the main thread.
         return UnityMcpDispatcher.Run(() =>
         {
             var options = new McpServerOptions
             {
+                ServerInfo = new Implementation
+                {
+                    Name = $"{provider.name}/mcp",
+                    Version = "2025.12.01"
+                    // Usefull for internal logging. Logging is not implemented currently.
+                },
                 ToolCollection = new McpServerPrimitiveCollection<McpServerTool>(),
                 ResourceCollection = new McpServerResourceCollection(),
                 PromptCollection = new McpServerPrimitiveCollection<McpServerPrompt>()
@@ -393,19 +434,17 @@ public sealed class HttpStreamableListenerServer
                 options.PromptCollection.Add(prompt);
             }
             // TOOLS PASS Through dispatcher
-            options.Filters.CallToolFilters.Add(next =>
+            options.Filters.Request.CallToolFilters.Add(next =>
             async (context, cancellationToken) =>
             {
-                CallToolResult result = null;
-                await UnityMcpDispatcher.Run(() =>
+                return await UnityMcpDispatcher.RunAsync(async () =>
                 {
-                    result = next(context, cancellationToken).GetAwaiter().GetResult();
+                    return await next(context, cancellationToken).ConfigureAwait(false);
                 });
-                return result;
             });
 
             // RESOURCES PASS Through dispatcher (needed when resource handlers touch Unity objects)
-            options.Filters.ReadResourceFilters.Add(next =>
+            options.Filters.Request.ReadResourceFilters.Add(next =>
             async (context, cancellationToken) =>
             {
                 ReadResourceResult result = null;
@@ -416,10 +455,43 @@ public sealed class HttpStreamableListenerServer
                 return result;
             });
 
+            options.Capabilities = new ServerCapabilities
+            {
+                Resources = new ResourcesCapability
+                {
+                    Subscribe = true,
+                    ListChanged = true
+                }
+            };
+
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+            options.Handlers.SubscribeToResourcesHandler = async (request, cancellationToken) =>
+            {
+                var uri = request.Params?.Uri;
+                if (!string.IsNullOrWhiteSpace(uri))
+                {
+                    sessionSubscriptions.TryAdd(uri, true);
+                }
+
+                return new EmptyResult();
+            };
+
+            options.Handlers.UnsubscribeFromResourcesHandler = async (request, cancellationToken) =>
+            {
+                var uri = request.Params?.Uri;
+                if (!string.IsNullOrWhiteSpace(uri))
+                {
+                    sessionSubscriptions.TryRemove(uri, out _);
+                }
+
+                return new EmptyResult();
+            };
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
 
             return options;
         });
     }
+
 
     private static async Task<JsonRpcMessage> ReadJsonRpcMessageAsync(HttpListenerRequest request)
     {
@@ -556,11 +628,12 @@ public sealed class HttpStreamableListenerServer
         public McpServer Server { get; }
         public CancellationToken SessionCancellation { get; private set; }
         public DateTimeOffset LastActive { get; private set; } = DateTimeOffset.UtcNow;
+        public ConcurrentDictionary<string, bool> SubscribedResources { get; }
 
         private readonly CancellationTokenSource _sessionCts;
         private readonly Task _serverRunTask;
 
-        public Session(string serverId, string id, StreamableHttpServerTransport transport, McpServer server, CancellationTokenSource sessionCts, Task serverRunTask)
+        public Session(string serverId, string id, StreamableHttpServerTransport transport, McpServer server, CancellationTokenSource sessionCts, Task serverRunTask, ConcurrentDictionary<string, bool> subscribedResources)
         {
             ServerId = serverId;
             Id = id;
@@ -569,6 +642,7 @@ public sealed class HttpStreamableListenerServer
             _sessionCts = sessionCts;
             SessionCancellation = sessionCts.Token;
             _serverRunTask = serverRunTask;
+            SubscribedResources = subscribedResources;
         }
 
         public void Touch()

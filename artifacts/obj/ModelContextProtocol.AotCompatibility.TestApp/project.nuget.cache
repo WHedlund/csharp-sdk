@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "dgSpecHash": "B60JqWnWddc=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\PC100223925\\Desktop\\temp\\csharp-sdk\\tests\\ModelContextProtocol.AotCompatibility.TestApp\\ModelContextProtocol.AotCompatibility.TestApp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\PC100223925\\.nuget\\packages\\microsoft.dotnet.ilcompiler\\10.0.0\\microsoft.dotnet.ilcompiler.10.0.0.nupkg.sha512",
+    "C:\\Users\\PC100223925\\.nuget\\packages\\microsoft.extensions.ai.abstractions\\10.3.0\\microsoft.extensions.ai.abstractions.10.3.0.nupkg.sha512",
+    "C:\\Users\\PC100223925\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\10.0.3\\microsoft.extensions.caching.abstractions.10.0.3.nupkg.sha512",
+    "C:\\Users\\PC100223925\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\10.0.3\\microsoft.extensions.configuration.abstractions.10.0.3.nupkg.sha512",
+    "C:\\Users\\PC100223925\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\10.0.3\\microsoft.extensions.dependencyinjection.abstractions.10.0.3.nupkg.sha512",
+    "C:\\Users\\PC100223925\\.nuget\\packages\\microsoft.extensions.diagnostics.abstractions\\10.0.3\\microsoft.extensions.diagnostics.abstractions.10.0.3.nupkg.sha512",
+    "C:\\Users\\PC100223925\\.nuget\\packages\\microsoft.extensions.fileproviders.abstractions\\10.0.3\\microsoft.extensions.fileproviders.abstractions.10.0.3.nupkg.sha512",
+    "C:\\Users\\PC100223925\\.nuget\\packages\\microsoft.extensions.hosting.abstractions\\10.0.3\\microsoft.extensions.hosting.abstractions.10.0.3.nupkg.sha512",
+    "C:\\Users\\PC100223925\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\10.0.3\\microsoft.extensions.logging.abstractions.10.0.3.nupkg.sha512",
+    "C:\\Users\\PC100223925\\.nuget\\packages\\microsoft.extensions.options\\10.0.3\\microsoft.extensions.options.10.0.3.nupkg.sha512",
+    "C:\\Users\\PC100223925\\.nuget\\packages\\microsoft.extensions.primitives\\10.0.3\\microsoft.extensions.primitives.10.0.3.nupkg.sha512",
+    "C:\\Users\\PC100223925\\.nuget\\packages\\microsoft.net.illink.tasks\\10.0.0\\microsoft.net.illink.tasks.10.0.0.nupkg.sha512",
+    "C:\\Users\\PC100223925\\.nuget\\packages\\modelcontextprotocol\\1.0.0\\modelcontextprotocol.1.0.0.nupkg.sha512",
+    "C:\\Users\\PC100223925\\.nuget\\packages\\modelcontextprotocol.aspnetcore\\1.0.0\\modelcontextprotocol.aspnetcore.1.0.0.nupkg.sha512",
+    "C:\\Users\\PC100223925\\.nuget\\packages\\modelcontextprotocol.core\\1.0.0\\modelcontextprotocol.core.1.0.0.nupkg.sha512",
+    "C:\\Users\\PC100223925\\.nuget\\packages\\runtime.win-x64.microsoft.dotnet.ilcompiler\\10.0.0\\runtime.win-x64.microsoft.dotnet.ilcompiler.10.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,144 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\PC100223925\\Desktop\\temp\\csharp-sdk\\src\\ModelContextProtocol.Analyzers\\ModelContextProtocol.Analyzers.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\PC100223925\\Desktop\\temp\\csharp-sdk\\src\\ModelContextProtocol.Analyzers\\ModelContextProtocol.Analyzers.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\PC100223925\\Desktop\\temp\\csharp-sdk\\src\\ModelContextProtocol.Analyzers\\ModelContextProtocol.Analyzers.csproj",
+        "projectName": "ModelContextProtocol.Analyzers",
+        "projectPath": "C:\\Users\\PC100223925\\Desktop\\temp\\csharp-sdk\\src\\ModelContextProtocol.Analyzers\\ModelContextProtocol.Analyzers.csproj",
+        "packagesPath": "C:\\Users\\PC100223925\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\PC100223925\\Desktop\\temp\\csharp-sdk\\artifacts\\obj\\ModelContextProtocol.Analyzers\\",
+        "projectStyle": "PackageReference",
+        "centralPackageVersionsManagementEnabled": true,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\PC100223925\\Desktop\\temp\\csharp-sdk\\NuGet.Config",
+          "C:\\Users\\PC100223925\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.0": {
+            "targetAlias": "netstandard2.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "netstandard2.0": {
+          "targetAlias": "netstandard2.0",
+          "dependencies": {
+            "Microsoft.CodeAnalysis.Analyzers": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.3.4, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.CodeAnalysis.CSharp": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[4.8.0, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.SourceLink.GitHub": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.0, )",
+              "versionCentrallyManaged": true
+            },
+            "NETStandard.Library": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.0.3, )",
+              "autoReferenced": true
+            }
+          },
+          "centralPackageVersions": {
+            "Anthropic": "12.8.0",
+            "coverlet.collector": "8.0.0",
+            "JsonSchema.Net": "9.1.1",
+            "Microsoft.Bcl.Memory": "10.0.3",
+            "Microsoft.CodeAnalysis.Analyzers": "3.3.4",
+            "Microsoft.CodeAnalysis.CSharp": "4.8.0",
+            "Microsoft.Extensions.AI": "10.3.0",
+            "Microsoft.Extensions.AI.Abstractions": "10.3.0",
+            "Microsoft.Extensions.AI.OpenAI": "10.2.0-preview.1.26063.2",
+            "Microsoft.Extensions.Caching.Abstractions": "10.0.3",
+            "Microsoft.Extensions.Caching.Memory": "10.0.3",
+            "Microsoft.Extensions.DependencyInjection": "10.0.3",
+            "Microsoft.Extensions.Hosting": "10.0.3",
+            "Microsoft.Extensions.Hosting.Abstractions": "10.0.3",
+            "Microsoft.Extensions.Logging": "10.0.3",
+            "Microsoft.Extensions.Logging.Abstractions": "10.0.3",
+            "Microsoft.Extensions.Logging.Console": "10.0.3",
+            "Microsoft.Extensions.Options": "10.0.3",
+            "Microsoft.Extensions.TimeProvider.Testing": "10.1.0",
+            "Microsoft.NET.Test.Sdk": "18.0.1",
+            "Microsoft.SourceLink.GitHub": "8.0.0",
+            "ModelContextProtocol": "0.4.0-preview.3",
+            "ModelContextProtocol.AspNetCore": "0.4.0-preview.3",
+            "ModelContextProtocol.Core": "0.4.0-preview.3",
+            "Moq": "4.20.72",
+            "OpenTelemetry": "1.15.0",
+            "OpenTelemetry.Exporter.InMemory": "1.15.0",
+            "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.15.0",
+            "OpenTelemetry.Extensions.Hosting": "1.15.0",
+            "OpenTelemetry.Instrumentation.AspNetCore": "1.15.0",
+            "OpenTelemetry.Instrumentation.Http": "1.15.0",
+            "Serilog": "4.3.1",
+            "Serilog.Extensions.Hosting": "10.0.0",
+            "Serilog.Extensions.Logging": "10.0.0",
+            "Serilog.Sinks.Console": "6.1.1",
+            "Serilog.Sinks.Debug": "3.0.0",
+            "Serilog.Sinks.File": "7.0.0",
+            "System.Diagnostics.DiagnosticSource": "10.0.3",
+            "System.IO.Pipelines": "10.0.3",
+            "System.Linq.AsyncEnumerable": "10.0.3",
+            "System.Net.Http": "4.3.4",
+            "System.Net.ServerSentEvents": "10.0.3",
+            "System.Text.Json": "10.0.3",
+            "System.Threading.Channels": "10.0.3",
+            "xunit.runner.visualstudio": "3.1.5",
+            "xunit.v3": "3.2.2"
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

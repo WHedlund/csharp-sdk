@@ -15,10 +15,16 @@ public static class UnityMcpDiscovery
         if (root == null) throw new ArgumentNullException(nameof(root));
 
         var tools = new List<McpServerTool>();
-        var components = root.GetComponentsInChildren<MonoBehaviour>(includeInactive: true);
+        var components = GetMonoBehavioursWithDiagnostics(root, "tools");
 
         foreach (var component in components)
         {
+            if (component == null)
+            {
+                Debug.LogWarning($"Skipping null or missing MonoBehaviour under {root.name} while discovering tools.");
+                continue;
+            }
+
             var type = component.GetType();
             var methods = type.GetMethods(
                 BindingFlags.Instance |
@@ -65,10 +71,16 @@ public static class UnityMcpDiscovery
         if (root == null) throw new ArgumentNullException(nameof(root));
 
         var resources = new List<McpServerResource>();
-        var components = root.GetComponentsInChildren<MonoBehaviour>(includeInactive: true);
+        var components = GetMonoBehavioursWithDiagnostics(root, "resources");
 
         foreach (var component in components)
         {
+            if (component == null)
+            {
+                Debug.LogWarning($"Skipping null or missing MonoBehaviour under {root.name} while discovering resources.");
+                continue;
+            }
+
             var type = component.GetType();
             var methods = type.GetMethods(
                 BindingFlags.Instance |
@@ -127,10 +139,16 @@ public static class UnityMcpDiscovery
         if (root == null) throw new ArgumentNullException(nameof(root));
 
         var prompts = new List<McpServerPrompt>();
-        var components = root.GetComponentsInChildren<MonoBehaviour>(includeInactive: true);
+        var components = GetMonoBehavioursWithDiagnostics(root, "prompts");
 
         foreach (var component in components)
         {
+            if (component == null)
+            {
+                Debug.LogWarning($"Skipping null or missing MonoBehaviour under {root.name} while discovering prompts.");
+                continue;
+            }
+
             var type = component.GetType();
             var methods = type.GetMethods(
                 BindingFlags.Instance |
@@ -162,6 +180,54 @@ public static class UnityMcpDiscovery
         }
 
         return prompts;
+    }
+
+    private static IEnumerable<MonoBehaviour> GetMonoBehavioursWithDiagnostics(GameObject root, string discoveryLabel)
+    {
+        var transforms = root.GetComponentsInChildren<Transform>(includeInactive: true);
+
+        foreach (var transform in transforms)
+        {
+            var components = transform.GetComponents<UnityEngine.Component>();
+            for (int i = 0; i < components.Length; i++)
+            {
+                var component = components[i];
+                if (component == null)
+                {
+                    string path = GetHierarchyPath(transform, root.transform);
+                    Debug.LogWarning(
+                        $"Skipping null or missing MonoBehaviour under {root.name} while discovering {discoveryLabel}. " +
+                        $"Missing component on '{path}' at index {i}.");
+                    continue;
+                }
+
+                if (component is MonoBehaviour monoBehaviour)
+                {
+                    yield return monoBehaviour;
+                }
+            }
+        }
+    }
+
+    private static string GetHierarchyPath(Transform target, Transform root)
+    {
+        if (target == null)
+            return "<null>";
+
+        if (root == null)
+            return target.name;
+
+        var names = new Stack<string>();
+        var current = target;
+        while (current != null)
+        {
+            names.Push(current.name);
+            if (current == root)
+                break;
+            current = current.parent;
+        }
+
+        return string.Join("/", names);
     }
 
 }

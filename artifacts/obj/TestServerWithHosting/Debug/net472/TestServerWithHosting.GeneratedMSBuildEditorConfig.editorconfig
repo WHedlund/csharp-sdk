@@ -1,0 +1,8 @@
+is_global = true
+build_property.RootNamespace = TestServerWithHosting
+build_property.ProjectDir = C:\Users\PC100223925\Desktop\temp\csharp-sdk\samples\TestServerWithHosting\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.CsWinRTUseWindowsUIXamlProjections = false
+build_property.EffectiveAnalysisLevelStyle = 
+build_property.EnableCodeStyleSeverity = 

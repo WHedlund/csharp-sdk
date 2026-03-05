@@ -63,7 +63,7 @@ public class TestMcpInvocation : MonoBehaviour
             options.ResourceCollection.Add(r);
 
         // TOOLS PASS Through dispatcher
-        options.Filters.CallToolFilters.Add(next =>
+        options.Filters.Request.CallToolFilters.Add(next =>
             async (context, cancellationToken) =>
             {
                 CallToolResult result = null;
@@ -129,17 +129,29 @@ public class TestMcpInvocation : MonoBehaviour
     {
         Debug.Log("Calling tools explicitly:");
 
+        var tools = await client.ListToolsAsync();
+
+        string FindToolBySuffix(string suffix)
+        {
+            return tools.FirstOrDefault(t => t.Name.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))?.Name;
+        }
+
         // ---- 1. CaptureFrame(format) ----
         try
         {
+            var captureTool = FindToolBySuffix("CaptureFrame");
+            if (captureTool == null)
+            {
+                Debug.LogWarning("CaptureFrame tool not found. Skipping.");
+                goto MoveCamera;
+            }
+
             var args = new Dictionary<string, object>()
             {
                 //["format"] = JsonDocument.Parse("\"png\"").RootElement.Clone()
             };
 
-            var tools = await client.ListToolsAsync();
-
-            var result = await client.CallToolAsync("gameobject.CaptureFrame", args);
+            var result = await client.CallToolAsync(captureTool, args);
             if (result.IsError == true)
             {
                 // Tool execution failed - get error message from content  
@@ -158,8 +170,16 @@ public class TestMcpInvocation : MonoBehaviour
         }
 
         // ---- 2. MoveCamera(x, y, z) ----
+        MoveCamera:
         try
         {
+            var moveTool = FindToolBySuffix("MoveCamera");
+            if (moveTool == null)
+            {
+                Debug.LogWarning("MoveCamera tool not found. Skipping.");
+                goto SampleLlm;
+            }
+
             var args = new Dictionary<string, object>()
             {
                 ["x"] = JsonDocument.Parse("1.0").RootElement.Clone(),
@@ -167,7 +187,7 @@ public class TestMcpInvocation : MonoBehaviour
                 ["z"] = JsonDocument.Parse("3.0").RootElement.Clone()
             };
 
-            var result = await client.CallToolAsync("gameobject.MoveCamera", args);
+            var result = await client.CallToolAsync(moveTool, args);
             if (result.IsError == true)
             {
                 // Tool execution failed - get error message from content  
@@ -182,6 +202,39 @@ public class TestMcpInvocation : MonoBehaviour
         catch (System.Exception ex)
         {
             Debug.LogError("MoveCamera error: " + ex);
+        }
+
+        // ---- 3. SampleLLM(prompt, maxTokens) ----
+        SampleLlm:
+        try
+        {
+            var sampleTool = FindToolBySuffix("SampleLLM");
+            if (sampleTool == null)
+            {
+                Debug.LogWarning("SampleLLM tool not found. Skipping.");
+                return;
+            }
+
+            var args = new Dictionary<string, object>()
+            {
+                ["prompt"] = JsonDocument.Parse("\"Say hello from MCP sampling.\"").RootElement.Clone(),
+                ["maxTokens"] = JsonDocument.Parse("48").RootElement.Clone()
+            };
+
+            var result = await client.CallToolAsync(sampleTool, args);
+            if (result.IsError == true)
+            {
+                var errorMessage = (result.Content[0] as TextContentBlock)?.Text;
+                Debug.LogError("SampleLLM failed with error: " + errorMessage);
+            }
+            else
+            {
+                Debug.Log("SampleLLM result: " + JsonSerializer.Serialize(result));
+            }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("SampleLLM error: " + ex);
         }
     }
 
